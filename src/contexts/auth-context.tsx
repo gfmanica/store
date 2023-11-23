@@ -1,3 +1,4 @@
+import { Api } from '@/lib/axios';
 import {
   createContext,
   Dispatch,
@@ -28,7 +29,10 @@ export function AuthProvider({ children }: TAuthProvider) {
   const [user, setUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const getDBConnection = useCallback(() => {}, []);
+  const getDBConnection = useCallback(async () => {
+    const a = await Api.post('/api/teste');
+    debugger;
+  }, []);
 
   const contextValue = useMemo(
     () => ({
