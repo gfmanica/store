@@ -1,4 +1,5 @@
 import { Api } from '@/lib/axios';
+import { TConnection } from '@/types';
 import {
   createContext,
   Dispatch,
@@ -16,7 +17,9 @@ type TAuthContext = {
   setUser: Dispatch<SetStateAction<string>>;
   password: string;
   setPassword: Dispatch<SetStateAction<string>>;
-  getDBConnection: () => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
+  validateDBConnection: () => Promise<TConnection>;
 };
 
 type TAuthProvider = {
@@ -28,11 +31,17 @@ const AuthContext = createContext<TAuthContext>({} as TAuthContext);
 export function AuthProvider({ children }: TAuthProvider) {
   const [user, setUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const getDBConnection = useCallback(async () => {
-    const a = await Api.post('/api/teste');
-    debugger;
-  }, []);
+  const validateDBConnection = useCallback(async (): Promise<TConnection> => {
+    const authConnection: Promise<TConnection> = (
+      await Api.get('/api/auth', {
+        headers: { user: user, password: password },
+      })
+    ).data;
+
+    return authConnection;
+  }, [password, user]);
 
   const contextValue = useMemo(
     () => ({
@@ -40,9 +49,11 @@ export function AuthProvider({ children }: TAuthProvider) {
       setUser,
       password,
       setPassword,
-      getDBConnection,
+      validateDBConnection,
+      isAuthenticated,
+      setIsAuthenticated,
     }),
-    [user, password]
+    [user, password, isAuthenticated]
   );
 
   return (

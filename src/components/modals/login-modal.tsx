@@ -10,6 +10,8 @@ import {
   Modal,
   ModalContent,
 } from '@nextui-org/react';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 
 type TLoginModal = {
   isOpen: boolean;
@@ -17,8 +19,16 @@ type TLoginModal = {
 };
 
 export default function LoginModal({ isOpen, onClose }: TLoginModal) {
-  const { password, setPassword, setUser, user, getDBConnection } =
-    useAuthContext();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {
+    password,
+    setPassword,
+    setUser,
+    user,
+    validateDBConnection,
+    setIsAuthenticated,
+  } = useAuthContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Modal
@@ -48,9 +58,22 @@ export default function LoginModal({ isOpen, onClose }: TLoginModal) {
                   color="primary"
                   variant="shadow"
                   className="mt-6"
+                  isLoading={isLoading}
                   onClick={() => {
-                    onClose();
-                    getDBConnection();
+                    setIsLoading(true);
+
+                    validateDBConnection()
+                      .then((res) => {
+                        if (res.status === 200) {
+                          setIsAuthenticated(true);
+                          onClose();
+                        } else {
+                          enqueueSnackbar('Usuário ou senha incorretos', {
+                            variant: 'error',
+                          });
+                        }
+                      })
+                      .finally(() => setIsLoading(false));
                   }}
                 >
                   Entrar

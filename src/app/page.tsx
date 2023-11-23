@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { MdOutlineEdit, MdOutlineDelete } from 'react-icons/md';
 import { PrismaClient } from '@prisma/client';
 import {
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -14,17 +15,25 @@ import {
   getKeyValue,
 } from '@nextui-org/react';
 import type { Venda } from '@prisma/client';
+import { useQuery } from '@tanstack/react-query';
+import { useApiContext } from '@/contexts/api-context';
+import { useAuthContext } from '@/contexts/auth-context';
+import { TVenda } from '@/types';
+import { localeDate, money } from '@/utils/format';
 
-const rows = [
-  {
-    key: 1,
-    vlTotal: 'Tony Reichert',
-    dtVenda: 'CEO',
-    dsFuncionario: 'Active',
-    qtTotalProdutos: 'Active',
-    qtTotalItens: 'Active',
-  },
-];
+const getRows = (data: TVenda[] | undefined) => {
+  if (data) {
+    return data.map((item) => ({
+      idVenda: item.idVenda,
+      dtVenda: localeDate(item.dtVenda),
+      vlTotal: money(item.vlTotal),
+      dsFuncionario: item.funcionario.dsFuncionario,
+      qtTotalItens: item._count.item,
+    }));
+  }
+
+  return [];
+};
 
 const columns = [
   {
@@ -40,10 +49,6 @@ const columns = [
     label: 'Funcionário',
   },
   {
-    key: 'qtTotalProdutos',
-    label: 'Quantidade de produtos',
-  },
-  {
     key: 'qtTotalItens',
     label: 'Quantidade de itens',
   },
@@ -54,6 +59,16 @@ const columns = [
 ];
 
 export default function Home() {
+  const { isAuthenticated } = useAuthContext();
+  const Api = useApiContext();
+
+  const { data = [], isFetching } = useQuery<TVenda[]>({
+    queryKey: ['geTVenda'],
+    queryFn: () => Api.get('/api/venda').then((res) => res.data),
+    retry: false,
+    enabled: isAuthenticated,
+  });
+
   const renderCell = useCallback((user: any, columnKey: any) => {
     const cellValue = user[columnKey];
 
@@ -90,9 +105,13 @@ export default function Home() {
           )}
         </TableHeader>
 
-        <TableBody items={rows}>
+        <TableBody
+          items={getRows(data)}
+          isLoading={isFetching}
+          emptyContent={'Sem dados'}
+        >
           {(item) => (
-            <TableRow key={item.key}>
+            <TableRow key={item.idVenda}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}

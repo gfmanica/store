@@ -45,7 +45,7 @@ model Produto {
 
 model Venda {
   idVenda       Int          @id @default(autoincrement())
-  dtVenda       DateTime?    @db.Timestamp(6)
+  dtVenda       DateTime?    @default(now())
   vlTotal       Decimal?     @db.Decimal(7, 2)
   idFuncionario Int?
   item          Item[]
