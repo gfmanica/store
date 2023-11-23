@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useLayoutEffect } from 'react';
 import Navbar from './navbar';
 import Footer from './footer';
 import { useDisclosure } from '@nextui-org/react';
@@ -13,7 +13,7 @@ type TPage = {
 export default function Main({ children }: TPage) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  useEffect(() => onOpen(), []);
+  useLayoutEffect(() => onOpen(), []);
 
   return (
     <div className="flex flex-col min-h-[100dvh] min-w-full">
