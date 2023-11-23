@@ -11,9 +11,7 @@ type TPage = {
 };
 
 export default function Main({ children }: TPage) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  useLayoutEffect(() => onOpen(), []);
+  const { isOpen, onOpen, onClose } = useDisclosure({ defaultOpen: true });
 
   return (
     <div className="flex flex-col min-h-[100dvh] min-w-full">
