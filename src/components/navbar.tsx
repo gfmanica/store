@@ -6,7 +6,7 @@ export default function Navbar() {
       <div className="w-full flex items-center justify-between">
         <Link href="/">
           <p className="font-semibold text-lg hover:scale-125 transition duration-500">
-            Ecommerce
+            TasteHorizon
           </p>
         </Link>
       </div>
