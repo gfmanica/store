@@ -49,6 +49,7 @@ export default function LoginModal({ isOpen, onClose }: TLoginModal) {
                   variant="shadow"
                   className="mt-6"
                   onClick={() => {
+                    onClose();
                     getDBConnection();
                   }}
                 >
