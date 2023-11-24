@@ -9,6 +9,20 @@ export default function Navbar() {
             TasteHorizon
           </p>
         </Link>
+
+        <div className="flex items-center gap-6">
+          <Link href="/fornecedor">
+            <p className="font-semibold ">Fornecedores</p>
+          </Link>
+
+          <Link href="/produto">
+            <p className="font-semibold ">Produtos</p>
+          </Link>
+
+          <Link href="/">
+            <p className="font-semibold ">Vendas</p>
+          </Link>
+        </div>
       </div>
     </header>
   );

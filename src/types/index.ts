@@ -14,3 +14,18 @@ export type TVenda = {
     item: number;
   };
 };
+
+export type TFornecedor = {
+  idFornecedor: number;
+  dsFornecedor: string;
+};
+
+export type TProduto = {
+  idProduto: number;
+  dsProduto: string;
+  qtProduto: number;
+  vlProduto: string;
+  fornecedor: {
+    dsFornecedor: string;
+  };
+};

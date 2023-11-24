@@ -20,11 +20,12 @@ import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
 import { TVenda } from '@/types';
 import { localeDate, money } from '@/utils/format';
+import DataTable from '@/components/data-table';
 
 const getRows = (data: TVenda[] | undefined) => {
   if (data) {
     return data.map((item) => ({
-      idVenda: item.idVenda,
+      id: item.idVenda,
       dtVenda: localeDate(item.dtVenda),
       vlTotal: money(item.vlTotal),
       dsFuncionario: item.funcionario.dsFuncionario,
@@ -98,27 +99,12 @@ export default function Home() {
     <>
       <p className="text-2xl font-semibold">Vendas</p>
 
-      <Table isStriped>
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
-          )}
-        </TableHeader>
-
-        <TableBody
-          items={getRows(data)}
-          isLoading={isFetching}
-          emptyContent={'Sem dados'}
-        >
-          {(item) => (
-            <TableRow key={item.idVenda}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      <DataTable
+        columns={columns}
+        isFetching={isFetching}
+        rows={getRows(data)}
+        renderCell={renderCell}
+      />
     </>
   );
 }
