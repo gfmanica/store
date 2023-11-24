@@ -21,7 +21,7 @@ type TAuthContext = {
   setPassword: Dispatch<SetStateAction<string>>;
   isAuthenticated: boolean;
   setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
-  validateDBConnection: () => Promise<TConnection>;
+  validateDBConnection: () => Promise<void>;
 };
 
 type TAuthProvider = {
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: TAuthProvider) {
     enabled: false,
   });
 
-  const validateDBConnection = useCallback(async (): Promise<any> => {
+  const validateDBConnection = useCallback(async (): Promise<void> => {
     return refetch().then((res) => {
       if (res?.data?.status === 200) {
         setIsAuthenticated(true);
