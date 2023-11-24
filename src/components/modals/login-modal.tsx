@@ -63,16 +63,7 @@ export default function LoginModal({ isOpen, onClose }: TLoginModal) {
                     setIsLoading(true);
 
                     validateDBConnection()
-                      .then((res) => {
-                        if (res.status === 200) {
-                          setIsAuthenticated(true);
-                          onClose();
-                        } else {
-                          enqueueSnackbar('Usuário ou senha incorretos', {
-                            variant: 'error',
-                          });
-                        }
-                      })
+                      .then(onClose)
                       .finally(() => setIsLoading(false));
                   }}
                 >

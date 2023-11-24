@@ -1,5 +1,7 @@
 import { Api } from '@/lib/axios';
 import { TConnection } from '@/types';
+import { useQuery } from '@tanstack/react-query';
+import { enqueueSnackbar } from 'notistack';
 import {
   createContext,
   Dispatch,
@@ -33,15 +35,31 @@ export function AuthProvider({ children }: TAuthProvider) {
   const [password, setPassword] = useState<string>('');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const validateDBConnection = useCallback(async (): Promise<TConnection> => {
-    const authConnection: Promise<TConnection> = (
-      await Api.get('/api/auth', {
+  const { refetch } = useQuery<TConnection>({
+    queryKey: ['getValidationAuth'],
+    queryFn: () =>
+      Api.get('/api/auth', {
         headers: { user: user, password: password },
-      })
-    ).data;
+      }).then((res) => res.data),
+    retry: false,
+    enabled: false,
+  });
 
-    return authConnection;
-  }, [password, user]);
+  const validateDBConnection = useCallback(async (): Promise<any> => {
+    return refetch().then((res) => {
+      if (res?.data?.status === 200) {
+        setIsAuthenticated(true);
+
+        return Promise.resolve();
+      } else {
+        enqueueSnackbar('Usuário ou senha incorretos', {
+          variant: 'error',
+        });
+
+        return Promise.reject();
+      }
+    });
+  }, []);
 
   const contextValue = useMemo(
     () => ({
