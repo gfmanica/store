@@ -41,7 +41,7 @@ export default function LoginModal({ isOpen, onClose }: TLoginModal) {
       <ModalContent>
         {(onClose) => (
           <>
-            <Card className="w-[600px]">
+            <Card className="w-[80%] md:w-[600px]">
               <CardBody className="flex flex-col gap-4 p-6">
                 <p className="font-semibold text-2xl mb-2">Login</p>
 
