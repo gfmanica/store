@@ -10,14 +10,20 @@ export async function GET(
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const fornecedor = await prisma.fornecedor.findUnique({
-    select: { dsFornecedor: true, idFornecedor: true },
+  const produto = await prisma.produto.findUnique({
+    select: {
+      idProduto: true,
+      dsProduto: true,
+      qtProduto: true,
+      vlProduto: true,
+      fornecedor: { select: { dsFornecedor: true } },
+    },
     where: {
-      idFornecedor: Number(params.id),
+      idProduto: Number(params.id),
     },
   });
 
   prisma.$disconnect();
 
-  return NextResponse.json(fornecedor);
+  return NextResponse.json(produto);
 }

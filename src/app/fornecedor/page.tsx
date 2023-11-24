@@ -4,8 +4,9 @@ import DataTable from '@/components/data-table';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
 import { TFornecedor } from '@/types/index';
-import { Tooltip } from '@nextui-org/react';
+import { Button, Tooltip } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 import { ReactNode } from 'react';
 import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 
@@ -61,7 +62,7 @@ export default function Fornecedor() {
   const Api = useApiContext();
 
   const { data, isFetching } = useQuery<TFornecedor[]>({
-    queryKey: ['getTFornecedor'],
+    queryKey: ['getFornecedores'],
     queryFn: () => Api.get('/api/fornecedor').then((res) => res.data),
     retry: false,
     enabled: isAuthenticated,
@@ -69,7 +70,15 @@ export default function Fornecedor() {
 
   return (
     <>
-      <p className="text-2xl font-semibold">Fornecedores</p>
+      <div className="flex justify-between">
+        <p className="text-2xl font-semibold">Fornecedores</p>
+
+        <Link href="/fornecedor/form">
+          <Button variant="shadow" color="primary">
+            Inserir
+          </Button>
+        </Link>
+      </div>
 
       <DataTable
         columns={columns}

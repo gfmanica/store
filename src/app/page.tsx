@@ -1,20 +1,7 @@
 'use client';
-import { Key, useCallback } from 'react';
-import Image from 'next/image';
+import { useCallback } from 'react';
 import { MdOutlineEdit, MdOutlineDelete } from 'react-icons/md';
-import { PrismaClient } from '@prisma/client';
-import {
-  Spinner,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-  Tooltip,
-  getKeyValue,
-} from '@nextui-org/react';
-import type { Venda } from '@prisma/client';
+import { Tooltip } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';

@@ -1,3 +1,6 @@
+import { fornecedorZod } from '@/validators/index';
+import z from 'zod';
+
 export type TConnection = {
   status: number;
   message: string;
@@ -19,6 +22,8 @@ export type TFornecedor = {
   idFornecedor: number;
   dsFornecedor: string;
 };
+
+export type TFornecedorZod = z.infer<typeof fornecedorZod>;
 
 export type TProduto = {
   idProduto: number;
