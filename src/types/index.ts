@@ -34,4 +34,12 @@ export type TProduto = {
   fornecedor: TFornecedor;
 };
 
+export type TProdutoReturn = {
+  idProduto?: number;
+  dsProduto: string;
+  qtProduto: number;
+  vlProduto: string;
+  idFornecedor: number;
+};
+
 export type TProdutoZod = z.infer<typeof produtoZod>;

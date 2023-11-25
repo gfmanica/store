@@ -1,4 +1,4 @@
-import { Tooltip, useDisclosure } from '@nextui-org/react';
+import { Spinner, Tooltip, useDisclosure } from '@nextui-org/react';
 import React from 'react';
 import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 import ConfirmModal from '../modals/confirm-modal';

@@ -6,7 +6,7 @@ import {
   FieldValues,
   Path,
 } from 'react-hook-form';
-import { NumericFormat } from 'react-number-format';
+import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 type TInputField<TFieldValues extends FieldValues> = {
   label: string;
@@ -18,6 +18,7 @@ type TInputField<TFieldValues extends FieldValues> = {
   prefix?: string;
   decimalScale?: number;
   fixedDecimalScale?: boolean;
+  valueFormat?: 'floatValue' | 'value';
 };
 
 export default function NumberFormField<TFieldValues extends FieldValues>({
@@ -30,6 +31,7 @@ export default function NumberFormField<TFieldValues extends FieldValues>({
   decimalScale,
   fixedDecimalScale,
   prefix,
+  valueFormat = 'floatValue',
 }: TInputField<TFieldValues>) {
   return (
     <Controller
@@ -48,7 +50,11 @@ export default function NumberFormField<TFieldValues extends FieldValues>({
             decimalSeparator=","
             error={!!error}
             helperText={error ? error?.message : ''}
-            onValueChange={(values) => onChange(values.floatValue)}
+            onValueChange={(values) =>
+              onChange(
+                valueFormat === 'floatValue' ? values.floatValue : values.value
+              )
+            }
             customInput={Input}
           />
         );

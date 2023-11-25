@@ -1,4 +1,5 @@
 import {
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -22,12 +23,17 @@ export default function DataTable<TRow extends { id: number }>({
   isFetching,
 }: TDataTable<TRow>) {
   return (
-    <Table isStriped>
+    <Table isStriped >
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
 
-      <TableBody items={rows} isLoading={isFetching} emptyContent={'Sem dados'}>
+      <TableBody
+        items={rows}
+        isLoading={isFetching}
+        emptyContent={'Sem dados'}
+        loadingContent={<Spinner />}
+      >
         {(item: TRow) => (
           <TableRow key={item.id}>
             {(columnKey) => (

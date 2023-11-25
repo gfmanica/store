@@ -49,7 +49,7 @@ export default function FornecedorFormAutocomplete<
       control={control}
       render={({ field: { onChange, value } }) => (
         <Autocomplete
-          defaultItems={data || []}
+          defaultItems={data || [value]}
           label={label}
           disabled={disabled}
           isLoading={isFetching}

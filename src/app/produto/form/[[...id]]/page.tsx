@@ -5,7 +5,12 @@ import NumberFormField from '@/components/fields/number-form-field';
 import TextFormField from '@/components/fields/text-form-field';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
-import { TFornecedor, TProduto, TProdutoZod } from '@/types/index';
+import {
+  TFornecedor,
+  TProduto,
+  TProdutoReturn,
+  TProdutoZod,
+} from '@/types/index';
 import { produtoZod } from '@/validators/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input } from '@nextui-org/react';
@@ -42,16 +47,17 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
   useEffect(() => (data ? reset(data) : undefined), [data]);
 
   const { mutate, isPending } = useMutation<
-    AxiosResponse<TProdutoZod>,
+    AxiosResponse<TProdutoReturn>,
     AxiosError,
     TProdutoZod
   >({
     mutationFn: (data) => Api.post('/api/produto', data),
     onSuccess: (data) => {
+      debugger;
       let message = 'Produto salvo com sucesso!';
 
       if (!idProduto) {
-        push(`/produto/form/${data.data.fornecedor.idFornecedor}`);
+        push(`/produto/form/${data.data.idFornecedor}`);
 
         message = 'Produto criado com sucesso!';
       }
@@ -90,6 +96,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
             label="Valor"
             name="vlProduto"
             prefix="R$ "
+            valueFormat="value"
             error={errors.vlProduto}
           />
 
