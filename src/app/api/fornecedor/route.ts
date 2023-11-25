@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
   const searchParams = request.headers;
   const datasourceUrl = searchParams.get('datasourceUrl') || '';
 
-  console.log(data);
   const prisma = new PrismaClient({ datasourceUrl });
 
   const produtos = await prisma.fornecedor.upsert({

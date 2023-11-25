@@ -7,7 +7,7 @@ import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
 import { TVenda } from '@/types';
 import { localeDate, money } from '@/utils/format';
-import DataTable from '@/components/data-table';
+import DataTable from '@/components/table/data-table';
 
 const getRows = (data: TVenda[] | undefined) => {
   if (data) {

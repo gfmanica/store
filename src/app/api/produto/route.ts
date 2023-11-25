@@ -21,3 +21,21 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json(produtos);
 }
+
+// export async function POST(request: NextRequest) {
+//   const data:  = await request.json();
+//   const searchParams = request.headers;
+//   const datasourceUrl = searchParams.get('datasourceUrl') || '';
+
+//   const prisma = new PrismaClient({ datasourceUrl });
+
+//   const produtos = await prisma.fornecedor.upsert({
+//     where: { idFornecedor: data.idFornecedor || -1 },
+//     update: { dsFornecedor: data.dsFornecedor },
+//     create: data,
+//   });
+
+//   prisma.$disconnect();
+
+//   return NextResponse.json(produtos);
+// }

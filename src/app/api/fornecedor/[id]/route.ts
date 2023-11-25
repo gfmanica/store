@@ -21,3 +21,25 @@ export async function GET(
 
   return NextResponse.json(fornecedor);
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const searchParams = request.headers;
+  const datasourceUrl = searchParams.get('datasourceUrl') || '';
+
+  const prisma = new PrismaClient({ datasourceUrl });
+
+  try {
+    const fornecedor = await prisma.fornecedor.delete({
+      where: { idFornecedor: Number(params.id) },
+    });
+    prisma.$disconnect();
+    return NextResponse.json(fornecedor);
+  } catch (e) {
+    
+    prisma.$disconnect();
+    return NextResponse.json(e);
+  }
+}

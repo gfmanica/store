@@ -13,12 +13,7 @@ import {
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
-type TLoginModal = {
-  isOpen: boolean;
-  onClose: () => void;
-};
-
-export default function LoginModal({ isOpen, onClose }: TLoginModal) {
+export default function LoginModal() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     password,
@@ -26,9 +21,9 @@ export default function LoginModal({ isOpen, onClose }: TLoginModal) {
     setUser,
     user,
     validateDBConnection,
-    setIsAuthenticated,
+    isOpen,
+    onClose,
   } = useAuthContext();
-  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Modal

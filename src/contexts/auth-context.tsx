@@ -1,5 +1,6 @@
 import { Api } from '@/lib/axios';
 import { TConnection } from '@/types';
+import { useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { enqueueSnackbar } from 'notistack';
 import {
@@ -9,6 +10,7 @@ import {
   SetStateAction,
   useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
@@ -22,6 +24,8 @@ type TAuthContext = {
   isAuthenticated: boolean;
   setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
   validateDBConnection: () => Promise<void>;
+  isOpen: boolean;
+  onClose: () => void;
 };
 
 type TAuthProvider = {
@@ -34,6 +38,13 @@ export function AuthProvider({ children }: TAuthProvider) {
   const [user, setUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      onOpen();
+    }
+  }, []);
 
   const { refetch } = useQuery<TConnection>({
     queryKey: ['getValidationAuth'],
@@ -70,8 +81,10 @@ export function AuthProvider({ children }: TAuthProvider) {
       validateDBConnection,
       isAuthenticated,
       setIsAuthenticated,
+      isOpen,
+      onClose,
     }),
-    [user, password, isAuthenticated]
+    [user, password, isAuthenticated, isOpen]
   );
 
   return (
