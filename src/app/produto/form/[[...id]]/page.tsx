@@ -104,7 +104,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
             control={control}
             label="Fornecedor"
             name="fornecedor"
-            error={errors.fornecedor}
+            error={errors.fornecedor?.idFornecedor}
           />
         </div>
 
