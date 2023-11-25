@@ -14,7 +14,7 @@ export function ApiProvider({ children }: TApiProvider) {
   const { user, password } = useAuthContext();
   const Api = axios.create({
     headers: {
-      datasourceUrl: `postgres://${user}:${password}@ep-twilight-scene-54661059-pooler.us-east-1.postgres.vercel-storage.com:5432/verceldb?pgbouncer=true&connect_timeout=15`,
+      datasourceUrl: `postgres://default:TlsU2k9IQRfu@ep-twilight-scene-54661059-pooler.us-east-1.postgres.vercel-storage.com:5432/verceldb?pgbouncer=true&connect_timeout=15`,
     },
   });
 

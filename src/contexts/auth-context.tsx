@@ -37,14 +37,14 @@ const AuthContext = createContext<TAuthContext>({} as TAuthContext);
 export function AuthProvider({ children }: TAuthProvider) {
   const [user, setUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      onOpen();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     onOpen();
+  //   }
+  // }, []);
 
   const { refetch } = useQuery<TConnection>({
     queryKey: ['getValidationAuth'],

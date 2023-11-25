@@ -3,13 +3,20 @@ import { Fornecedor, PrismaClient } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.headers;
-  const datasourceUrl = searchParams.get('datasourceUrl') || '';
+  const { searchParams } = request.nextUrl;
+  const filterDsFornecedor = searchParams.get('dsFornecedor');
+  const { headers } = request;
+  const datasourceUrl = headers.get('datasourceUrl') || '';
 
   const prisma = new PrismaClient({ datasourceUrl });
 
   const fornecedores = await prisma.fornecedor.findMany({
     select: { dsFornecedor: true, idFornecedor: true },
+    where: {
+      dsFornecedor: {
+        contains: filterDsFornecedor || '',
+      },
+    },
   });
 
   prisma.$disconnect();
@@ -19,12 +26,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const data: TFornecedorZod = await request.json();
-  const searchParams = request.headers;
-  const datasourceUrl = searchParams.get('datasourceUrl') || '';
+  const { headers } = request;
+  const datasourceUrl = headers.get('datasourceUrl') || '';
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const produtos = await prisma.fornecedor.upsert({
+  const fornecedor = await prisma.fornecedor.upsert({
     where: { idFornecedor: data.idFornecedor || -1 },
     update: { dsFornecedor: data.dsFornecedor },
     create: data,
@@ -32,5 +39,5 @@ export async function POST(request: NextRequest) {
 
   prisma.$disconnect();
 
-  return NextResponse.json(produtos);
+  return NextResponse.json(fornecedor);
 }

@@ -5,8 +5,9 @@ import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
 import { TProduto } from '@/types/index';
 import { money } from '@/utils/format';
-import { Tooltip } from '@nextui-org/react';
+import { Button, Tooltip } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 import { ReactNode } from 'react';
 import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 
@@ -35,7 +36,7 @@ const columns = [
   },
   {
     key: 'qtProduto',
-    label: 'Quantidade no estoque',
+    label: 'Quantidade de estoque',
   },
   {
     key: 'dsFornecedor',
@@ -85,7 +86,15 @@ export default function Produto() {
 
   return (
     <>
-      <p className="text-2xl font-semibold">Produtos</p>
+      <div className="flex justify-between">
+        <p className="text-2xl font-semibold">Produtos</p>
+
+        <Link href="/produto/form">
+          <Button variant="shadow" color="primary">
+            Inserir
+          </Button>
+        </Link>
+      </div>
 
       <DataTable
         columns={columns}

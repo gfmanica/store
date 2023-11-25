@@ -42,7 +42,6 @@ export default function FornecedorForm({
     enabled: isAuthenticated && !!idFornecedor,
   });
 
-  console.log(data);
   useEffect(() => (data ? reset(data) : undefined), [data]);
 
   const { mutate, isPending } = useMutation<

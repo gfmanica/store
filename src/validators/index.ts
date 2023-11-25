@@ -10,5 +10,8 @@ export const produtoZod = z.object({
   dsProduto: z.string(),
   vlProduto: z.string(),
   qtProduto: z.number(),
-  idFornecedor: z.number(),
+  fornecedor: z.object({
+    idFornecedor: z.number(),
+    dsFornecedor: z.string(),
+  }),
 });

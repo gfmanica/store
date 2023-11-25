@@ -5,8 +5,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const searchParams = request.headers;
-  const datasourceUrl = searchParams.get('datasourceUrl') || '';
+  const { headers } = request;
+  const datasourceUrl = headers.get('datasourceUrl') || '';
 
   const prisma = new PrismaClient({ datasourceUrl });
 
@@ -16,7 +16,7 @@ export async function GET(
       dsProduto: true,
       qtProduto: true,
       vlProduto: true,
-      fornecedor: { select: { dsFornecedor: true } },
+      fornecedor: { select: { dsFornecedor: true, idFornecedor: true } },
     },
     where: {
       idProduto: Number(params.id),

@@ -61,7 +61,12 @@ export default function Fornecedor() {
 
     switch (columnKey) {
       case 'action':
-        return <ActionColumnTable callbackConfirm={() => mutate(item.id)} />;
+        return (
+          <ActionColumnTable
+            callbackConfirm={() => mutate(item.id)}
+            href={`/fornecedor/form/${item.id}`}
+          />
+        );
 
       default:
         return cellValue;
