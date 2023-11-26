@@ -57,7 +57,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
       let message = 'Produto salvo com sucesso!';
 
       if (!idProduto) {
-        push(`/produto/form/${data.data.idFornecedor}`);
+        push(`/produto/form/${data.data.idProduto}`);
 
         message = 'Produto criado com sucesso!';
       }
