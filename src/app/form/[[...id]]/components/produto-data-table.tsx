@@ -90,8 +90,9 @@ export default function ProdutoDataTable({
             onChangeCallback={(value) => {
               setValue(
                 `item.${index}.vlParcial`,
-                value * Number(getValues(`item.${index}.produto.vlProduto`)) ||
-                  0
+                Number(
+                  value * Number(getValues(`item.${index}.produto.vlProduto`))
+                ) || 0
               );
 
               updateTotalValue();

@@ -6,7 +6,7 @@ import TextFormField from '@/components/fields/text-form-field';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
 import { TItemZod, TVendaZod } from '@/types/index';
-import { produtoZod } from '@/validators/index';
+import { produtoZod, vendaZod } from '@/validators/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input } from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -32,7 +32,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     getValues,
     formState: { errors },
   } = useForm<TVendaZod>({
-    resolver: zodResolver(produtoZod),
+    resolver: zodResolver(vendaZod),
   });
 
   const { data, isFetching } = useQuery<TVendaZod>({
@@ -43,7 +43,15 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     enabled: isAuthenticated && !!idVenda,
   });
 
-  useEffect(() => (data ? reset(data) : undefined), [data]);
+  useEffect(() => {
+    if (data) {
+      data.item.forEach((item) => {
+        item.vlParcial = Number(item.vlParcial);
+      });
+      
+      reset(data);
+    }
+  }, [data]);
 
   const { mutate, isPending } = useMutation<
     AxiosResponse<any>,
@@ -64,6 +72,8 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     },
   });
 
+  console.log(errors);
+
   const addProduto = () => {
     const items = getValues('item') || [];
 
@@ -73,7 +83,6 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
           ? Number(items.at(-1)?.idItem) - 1
           : -1
         : -1,
-      idProduto: -1,
       qtItem: 0,
       vlParcial: 0,
       produto: null,
@@ -119,7 +128,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
             color="primary"
             size="sm"
             onClick={addProduto}
-            className='font-semibold'
+            className="font-semibold"
           >
             Incluir
           </Button>
@@ -140,7 +149,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
             color="primary"
             type="submit"
             isLoading={isPending}
-            className='font-semibold'
+            className="font-semibold"
           >
             Salvar
           </Button>

@@ -10,7 +10,7 @@ export async function GET(
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const produto = await prisma.venda.findUnique({
+  const venda = await prisma.venda.findUnique({
     select: {
       idVenda: true,
       dtVenda: true,
@@ -32,7 +32,7 @@ export async function GET(
 
   prisma.$disconnect();
 
-  return NextResponse.json(produto);
+  return NextResponse.json(venda);
 }
 
 export async function DELETE(

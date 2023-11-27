@@ -18,10 +18,16 @@ export const produtoZod = z.object({
 
 export const itemZod = z.object({
   idItem: z.number(),
-  idProduto: z.number(),
   qtItem: z.number().default(0),
   vlParcial: z.number().default(0),
-  produto: produtoZod.nullish(),
+  produto: z
+    .object({
+      idProduto: z.number(),
+      dsProduto: z.string().nullish(),
+      vlProduto: z.string().nullish(),
+      qtProduto: z.number().nullish(),
+    })
+    .nullable(),
 });
 
 export const vendaZod = z.object({
@@ -29,7 +35,7 @@ export const vendaZod = z.object({
   dtVenda: z.string().datetime(),
   vlTotal: z.number().default(0),
   funcionario: z.object({
-    idFuncionario: z.number(),
+    idFuncionario: z.number().default(1),
   }),
   item: z.array(itemZod).default([]),
 });
