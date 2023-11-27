@@ -5,7 +5,7 @@ import NumberFormField from '@/components/fields/number-form-field';
 import TextFormField from '@/components/fields/text-form-field';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
-import { TVendaZod } from '@/types/index';
+import { TItemZod, TVendaZod } from '@/types/index';
 import { produtoZod } from '@/validators/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input } from '@nextui-org/react';
@@ -64,6 +64,24 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     },
   });
 
+  const addProduto = () => {
+    const items = getValues('item') || [];
+
+    let newItem: TItemZod = {
+      idItem: items.at(-1)
+        ? Number(items.at(-1)?.idItem) < 0
+          ? Number(items.at(-1)?.idItem) - 1
+          : -1
+        : -1,
+      idProduto: -1,
+      qtItem: 0,
+      vlParcial: 0,
+      produto: null,
+    };
+
+    setValue('item', [...items, newItem]);
+  };
+
   return (
     <>
       <p className="text-2xl font-semibold">
@@ -93,7 +111,13 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
           />
         </div>
 
-        <p className="text-lg font-semibold">Produtos</p>
+        <div className="flex justify-between">
+          <p className="text-lg font-semibold">Produtos</p>
+
+          <Button variant="shadow" color="primary" onClick={addProduto}>
+            Incluir
+          </Button>
+        </div>
 
         <ProdutoDataTable
           data={watch('item')}

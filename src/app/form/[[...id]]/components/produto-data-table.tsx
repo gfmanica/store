@@ -67,7 +67,16 @@ export default function ProdutoDataTable({
 
   console.log(data);
 
+  const updateTotalValue = () => {
+    setValue(
+      'vlTotal',
+      Number(data.reduce((acc, cur) => acc + Number(cur.vlParcial), 0))
+    );
+  };
+
   const renderCell = (item: any, columnKey: any): ReactNode => {
+    debugger;
+    const index = data.findIndex((produto) => produto.idItem === item.id);
     const cellValue = item[columnKey];
 
     switch (columnKey) {
@@ -75,15 +84,18 @@ export default function ProdutoDataTable({
         return (
           <NumberFormField<TVendaZod>
             control={control}
-            name={`item.${0}.qtItem`}
+            name={`item.${index}.qtItem`}
             size="sm"
-            error={errors?.item && errors?.item[0]?.qtItem}
-            onChangeCallback={(value) =>
+            error={errors?.item && errors?.item[index]?.qtItem}
+            onChangeCallback={(value) => {
               setValue(
-                `item.${0}.vlParcial`,
-                value * Number(getValues(`item.${0}.produto.vlProduto`)) || 0
-              )
-            }
+                `item.${index}.vlParcial`,
+                value * Number(getValues(`item.${index}.produto.vlProduto`)) ||
+                  0
+              );
+
+              updateTotalValue();
+            }}
           />
         );
       case 'vlParcial':
@@ -94,15 +106,17 @@ export default function ProdutoDataTable({
           <ProdutoFormAutocomplete<TVendaZod>
             control={control}
             label="Produto"
-            name={`item.${0}.produto`}
-            error={errors?.item && errors?.item[0]?.produto?.idProduto}
-            onChangeCallback={(value) =>
+            name={`item.${index}.produto`}
+            error={errors?.item && errors?.item[index]?.produto?.idProduto}
+            onChangeCallback={(value) => {
               setValue(
-                `item.${0}.vlParcial`,
+                `item.${index}.vlParcial`,
                 Number(value ? value?.vlProduto : 0) *
-                  Number(getValues(`item.${0}.qtItem`))
-              )
-            }
+                  Number(getValues(`item.${index}.qtItem`))
+              );
+
+              updateTotalValue();
+            }}
           />
         );
 
@@ -138,6 +152,7 @@ export default function ProdutoDataTable({
       isFetching={isFetching}
       rows={getRows(data)}
       renderCell={renderCell}
+      isStripped={false}
     />
   );
 }

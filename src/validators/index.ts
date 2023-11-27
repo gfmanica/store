@@ -21,7 +21,7 @@ export const itemZod = z.object({
   idProduto: z.number(),
   qtItem: z.number().default(0),
   vlParcial: z.number().default(0),
-  produto: produtoZod.optional(),
+  produto: produtoZod.nullish(),
 });
 
 export const vendaZod = z.object({

@@ -14,6 +14,7 @@ type TDataTable<TRow> = {
   columns: { key: string; label: string }[];
   renderCell: (item: TRow, columnKey: Key) => ReactNode;
   isFetching: boolean;
+  isStripped?: boolean;
 };
 
 export default function DataTable<TRow extends { id: number }>({
@@ -21,9 +22,10 @@ export default function DataTable<TRow extends { id: number }>({
   columns,
   renderCell,
   isFetching,
+  isStripped = true,
 }: TDataTable<TRow>) {
   return (
-    <Table isStriped >
+    <Table isStriped={isStripped}>
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>

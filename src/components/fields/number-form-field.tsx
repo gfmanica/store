@@ -47,7 +47,7 @@ export default function NumberFormField<TFieldValues extends FieldValues>({
             disabled={disabled}
             suffix={suffix}
             prefix={prefix}
-            value={value || ''}
+            value={value ?? ''}
             label={label}
             size={size}
             decimalScale={decimalScale}
