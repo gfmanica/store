@@ -20,6 +20,7 @@ type TInputField<TFieldValues extends FieldValues> = {
   fixedDecimalScale?: boolean;
   valueFormat?: 'floatValue' | 'value';
   size?: 'sm' | 'md' | 'lg';
+  onChangeCallback?: (value: number) => void;
 };
 
 export default function NumberFormField<TFieldValues extends FieldValues>({
@@ -34,6 +35,7 @@ export default function NumberFormField<TFieldValues extends FieldValues>({
   prefix,
   size = 'md',
   valueFormat = 'floatValue',
+  onChangeCallback,
 }: TInputField<TFieldValues>) {
   return (
     <Controller
@@ -53,11 +55,18 @@ export default function NumberFormField<TFieldValues extends FieldValues>({
             decimalSeparator=","
             error={!!error}
             helperText={error ? error?.message : ''}
-            onValueChange={(values) =>
-              onChange(
-                valueFormat === 'floatValue' ? values.floatValue : values.value
-              )
-            }
+            onValueChange={(values) => {
+              const value =
+                valueFormat === 'floatValue'
+                  ? values.floatValue || 0
+                  : values.value;
+
+              onChange(value);
+
+              if (onChangeCallback) {
+                onChangeCallback(Number(value));
+              }
+            }}
             customInput={Input}
           />
         );

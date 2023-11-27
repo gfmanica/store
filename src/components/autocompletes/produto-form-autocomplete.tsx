@@ -21,6 +21,7 @@ type TInputField<TFieldValues extends FieldValues> = {
   disabled?: boolean;
   className?: HTMLProps<HTMLElement>['className'];
   size?: 'sm' | 'md' | 'lg';
+  onChangeCallback?: (value: TProduto | null) => void;
 };
 
 export default function ProdutoFormAutocomplete<
@@ -33,6 +34,7 @@ export default function ProdutoFormAutocomplete<
   error,
   disabled,
   className,
+  onChangeCallback,
 }: TInputField<TFieldValues>) {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
@@ -76,6 +78,10 @@ export default function ProdutoFormAutocomplete<
               } else {
                 onChange(null);
                 setSelectedKey('');
+              }
+
+              if (onChangeCallback) {
+                onChangeCallback(fornecedor || null);
               }
             }}
           >

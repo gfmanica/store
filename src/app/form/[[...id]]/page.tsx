@@ -28,6 +28,8 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     handleSubmit,
     reset,
     watch,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm<TVendaZod>({
     resolver: zodResolver(produtoZod),
@@ -91,13 +93,15 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
           />
         </div>
 
-        <p className='text-lg font-semibold'>Produtos</p>
+        <p className="text-lg font-semibold">Produtos</p>
 
         <ProdutoDataTable
           data={watch('item')}
           control={control}
           errors={errors}
           isFetching={isFetching}
+          setValue={setValue}
+          getValues={getValues}
         />
 
         <div className="flex justify-end">
