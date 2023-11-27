@@ -52,7 +52,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
       data.item.forEach((item) => {
         item.vlParcial = Number(item.vlParcial);
       });
-      debugger;
+
       data.dtVenda = new Date(data.dtVenda).toLocaleDateString();
       data.funcionario = { idFuncionario: 1 };
 
@@ -97,7 +97,6 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
   };
 
   const formatData = (data: TVendaZod) => {
-    debugger;
     const newData = { ...data };
     const [day, month, year] = newData.dtVenda.split('/');
 

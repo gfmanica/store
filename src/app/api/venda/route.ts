@@ -57,7 +57,25 @@ export async function POST(request: NextRequest) {
       idFuncionario: data.funcionario.idFuncionario,
       vlTotal: data.vlTotal,
       item: {
-        connectOrCreate: connectOrCreateItem,
+        upsert: data.item.map((item) => {
+          return {
+            where: { idItem: item.idItem },
+            update: {
+              qtItem: item.qtItem,
+              vlParcial: item.vlParcial,
+              produto: {
+                connect: { idProduto: item.produto?.idProduto },
+              },
+            },
+            create: {
+              qtItem: item.qtItem,
+              vlParcial: item.vlParcial,
+              produto: {
+                connect: { idProduto: item.produto?.idProduto },
+              },
+            },
+          };
+        }),
       },
     },
     create: {
@@ -65,7 +83,15 @@ export async function POST(request: NextRequest) {
       idFuncionario: data.funcionario.idFuncionario,
       vlTotal: data.vlTotal,
       item: {
-        connectOrCreate: connectOrCreateItem,
+        create: data.item.map((item) => {
+          return {
+            qtItem: item.qtItem,
+            vlParcial: item.vlParcial,
+            produto: {
+              connect: { idProduto: item.produto?.idProduto },
+            },
+          };
+        }),
       },
     },
   });

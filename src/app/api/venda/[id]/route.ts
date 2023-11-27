@@ -45,11 +45,11 @@ export async function DELETE(
   const prisma = new PrismaClient({ datasourceUrl });
 
   try {
-    const items = await prisma.item.deleteMany({
+    await prisma.item.deleteMany({
       where: { venda: { idVenda: Number(params.id) } },
     });
 
-    const venda = await prisma.venda.delete({
+    await prisma.venda.delete({
       where: { idVenda: Number(params.id) },
     });
     prisma.$disconnect();
