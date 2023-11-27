@@ -9,7 +9,7 @@ import {
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 type TInputField<TFieldValues extends FieldValues> = {
-  label: string;
+  label?: string;
   error?: FieldError;
   name: Path<TFieldValues>;
   control: Control<TFieldValues, unknown>;
@@ -19,6 +19,7 @@ type TInputField<TFieldValues extends FieldValues> = {
   decimalScale?: number;
   fixedDecimalScale?: boolean;
   valueFormat?: 'floatValue' | 'value';
+  size?: 'sm' | 'md' | 'lg';
 };
 
 export default function NumberFormField<TFieldValues extends FieldValues>({
@@ -31,6 +32,7 @@ export default function NumberFormField<TFieldValues extends FieldValues>({
   decimalScale,
   fixedDecimalScale,
   prefix,
+  size = 'md',
   valueFormat = 'floatValue',
 }: TInputField<TFieldValues>) {
   return (
@@ -45,6 +47,7 @@ export default function NumberFormField<TFieldValues extends FieldValues>({
             prefix={prefix}
             value={value || ''}
             label={label}
+            size={size}
             decimalScale={decimalScale}
             fixedDecimalScale={fixedDecimalScale}
             decimalSeparator=","

@@ -1,4 +1,3 @@
-
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
 import { TProduto } from '@/types';
@@ -15,18 +14,20 @@ import {
 } from 'react-hook-form';
 
 type TInputField<TFieldValues extends FieldValues> = {
-  label: string;
+  label?: string;
   name: Path<TFieldValues>;
   control: Control<TFieldValues, unknown>;
   error?: FieldError;
   disabled?: boolean;
   className?: HTMLProps<HTMLElement>['className'];
+  size?: 'sm' | 'md' | 'lg';
 };
 
 export default function ProdutoFormAutocomplete<
   TFieldValues extends FieldValues
 >({
   control,
+  size = 'sm',
   name,
   label,
   error,
@@ -52,7 +53,7 @@ export default function ProdutoFormAutocomplete<
         if (data && !selectedKey && value) {
           setSelectedKey(value.idProduto.toString());
         }
-        
+
         return (
           <Autocomplete
             defaultItems={data || []}
@@ -60,6 +61,7 @@ export default function ProdutoFormAutocomplete<
             disabled={disabled}
             isLoading={isFetching}
             className={cn(className)}
+            size={size}
             isInvalid={!!error}
             errorMessage={error ? error?.message : ''}
             selectedKey={selectedKey}

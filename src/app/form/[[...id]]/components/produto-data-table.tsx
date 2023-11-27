@@ -1,4 +1,5 @@
 import ProdutoFormAutocomplete from '@/components/autocompletes/produto-form-autocomplete';
+import NumberFormField from '@/components/fields/number-form-field';
 import ConfirmModal from '@/components/modals/confirm-modal';
 import DataTable from '@/components/table/data-table';
 import { TItemZod, TVendaZod } from '@/types';
@@ -58,6 +59,15 @@ export default function ProdutoDataTable({
     const cellValue = item[columnKey];
 
     switch (columnKey) {
+      case 'qtItem':
+        return (
+          <NumberFormField<TVendaZod>
+            control={control}
+            name={`item.${0}.qtItem`}
+            size="sm"
+            error={errors?.item && errors?.item[0]?.qtItem}
+          />
+        );
       case 'produto':
         return (
           <ProdutoFormAutocomplete<TVendaZod>
