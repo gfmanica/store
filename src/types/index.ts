@@ -1,4 +1,4 @@
-import { fornecedorZod, produtoZod } from '@/validators/index';
+import { fornecedorZod, itemZod, produtoZod, vendaZod } from '@/validators/index';
 import { Fornecedor } from '@prisma/client';
 import z from 'zod';
 
@@ -18,6 +18,8 @@ export type TVenda = {
     item: number;
   };
 };
+
+export type TVendaZod = z.infer<typeof vendaZod>;
 
 export type TFornecedor = {
   idFornecedor: number;
@@ -43,3 +45,5 @@ export type TProdutoReturn = {
 };
 
 export type TProdutoZod = z.infer<typeof produtoZod>;
+
+export type TItemZod = z.infer<typeof itemZod>;

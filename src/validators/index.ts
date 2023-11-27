@@ -15,3 +15,21 @@ export const produtoZod = z.object({
     dsFornecedor: z.string(),
   }),
 });
+
+export const itemZod = z.object({
+  idItem: z.number(),
+  idProduto: z.number(),
+  qtItem: z.number().default(0),
+  vlParcial: z.number().default(0),
+  produto: produtoZod.optional(),
+});
+
+export const vendaZod = z.object({
+  idVenda: z.number().optional(),
+  dtVenda: z.string().datetime(),
+  vlTotal: z.number().default(0),
+  funcionario: z.object({
+    idFuncionario: z.number(),
+  }),
+  item: z.array(itemZod).default([]),
+});

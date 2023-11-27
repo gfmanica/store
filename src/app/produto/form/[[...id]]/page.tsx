@@ -53,7 +53,6 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
   >({
     mutationFn: (data) => Api.post('/api/produto', data),
     onSuccess: (data) => {
-      debugger;
       let message = 'Produto salvo com sucesso!';
 
       if (!idProduto) {
@@ -68,7 +67,9 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
 
   return (
     <>
-      <p className="text-2xl font-semibold">Produto</p>
+      <p className="text-2xl font-semibold">
+        {idProduto ? 'Editar' : 'Cadastrar'} produto
+      </p>
 
       <form
         className="flex flex-col gap-4"
@@ -96,6 +97,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
             label="Valor"
             name="vlProduto"
             prefix="R$ "
+            decimalScale={2}
             valueFormat="value"
             error={errors.vlProduto}
           />

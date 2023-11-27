@@ -12,15 +12,15 @@ export default function Navbar() {
 
         <div className="flex items-center gap-6">
           <Link href="/fornecedor">
-            <p className="font-semibold ">Fornecedores</p>
+            <p className="hover:font-semibold transition-all">Fornecedores</p>
           </Link>
 
           <Link href="/produto">
-            <p className="font-semibold ">Produtos</p>
+            <p className="hover:font-semibold transition-all">Produtos</p>
           </Link>
 
           <Link href="/">
-            <p className="font-semibold ">Vendas</p>
+            <p className="hover:font-semibold transition-all">Vendas</p>
           </Link>
         </div>
       </div>

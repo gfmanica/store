@@ -25,14 +25,14 @@ export default function ActionColumnTable({
 
       <div className="relative flex items-center gap-2">
         <Link href={href}>
-          <Tooltip placement="left" content="Edit user">
+          <Tooltip placement="left" content="Editar">
             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
               <MdOutlineEdit size={22} />
             </span>
           </Tooltip>
         </Link>
 
-        <Tooltip placement="right" color="danger" content="Delete user">
+        <Tooltip placement="right" color="danger" content="Excluir">
           <span
             className="text-lg text-danger cursor-pointer active:opacity-50"
             onClick={onOpen}

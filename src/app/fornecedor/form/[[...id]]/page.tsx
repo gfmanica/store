@@ -65,7 +65,9 @@ export default function FornecedorForm({
 
   return (
     <>
-      <p className="text-2xl font-semibold">Fornecedor</p>
+      <p className="text-2xl font-semibold">
+        {idFornecedor ? 'Editar' : 'Cadastrar'} fornecedor
+      </p>
 
       <form
         className="flex flex-col gap-4"

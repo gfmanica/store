@@ -1,13 +1,16 @@
 'use client';
-import { useCallback } from 'react';
+import { ReactNode, useCallback } from 'react';
 import { MdOutlineEdit, MdOutlineDelete } from 'react-icons/md';
-import { Tooltip } from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
+import { Button, Tooltip } from '@nextui-org/react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
 import { TVenda } from '@/types';
 import { localeDate, money } from '@/utils/format';
 import DataTable from '@/components/table/data-table';
+import { enqueueSnackbar } from 'notistack';
+import ActionColumnTable from '@/components/table/action-column-table';
+import Link from 'next/link';
 
 const getRows = (data: TVenda[] | undefined) => {
   if (data) {
@@ -50,41 +53,53 @@ export default function Home() {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
 
-  const { data = [], isFetching } = useQuery<TVenda[]>({
+  const { data = [], isFetching, refetch } = useQuery<TVenda[]>({
     queryKey: ['geTVenda'],
     queryFn: () => Api.get('/api/venda').then((res) => res.data),
     retry: false,
     enabled: isAuthenticated,
   });
 
-  const renderCell = useCallback((user: any, columnKey: any) => {
-    const cellValue = user[columnKey];
+  const { mutate } = useMutation({
+    mutationFn: (data: string) => Api.delete(`/api/venda/${data}`),
+    onSuccess: () => {
+      enqueueSnackbar('Venda excluída com sucesso!', {
+        variant: 'success',
+      });
+
+      refetch();
+    },
+  });
+
+  const renderCell = (item: any, columnKey: any): ReactNode => {
+    const cellValue = item[columnKey];
 
     switch (columnKey) {
       case 'action':
         return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip placement="left" content="Edit user">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <MdOutlineEdit size={22} />
-              </span>
-            </Tooltip>
-            <Tooltip placement="right" color="danger" content="Delete user">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <MdOutlineDelete size={22} />
-              </span>
-            </Tooltip>
-          </div>
+          <ActionColumnTable
+            callbackConfirm={() => mutate(item.id)}
+            href={`/form/${item.id}`}
+          />
         );
 
       default:
         return cellValue;
     }
-  }, []);
+  };
 
   return (
     <>
-      <p className="text-2xl font-semibold">Vendas</p>
+      <div className="flex justify-between">
+        <p className="text-2xl font-semibold">Vendas</p>
+
+        <Link href="/form">
+          <Button variant="shadow" color="primary">
+            Inserir
+          </Button>
+        </Link>
+      </div>
+
 
       <DataTable
         columns={columns}
