@@ -1,5 +1,4 @@
 import { fornecedorZod, itemZod, produtoZod, vendaZod } from '@/validators/index';
-import { Fornecedor } from '@prisma/client';
 import z from 'zod';
 
 export type TConnection = {
