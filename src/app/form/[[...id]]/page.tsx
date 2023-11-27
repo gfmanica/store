@@ -114,7 +114,13 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
         <div className="flex justify-between">
           <p className="text-lg font-semibold">Produtos</p>
 
-          <Button variant="shadow" color="primary" onClick={addProduto}>
+          <Button
+            variant="shadow"
+            color="primary"
+            size="sm"
+            onClick={addProduto}
+            className='font-semibold'
+          >
             Incluir
           </Button>
         </div>
@@ -134,6 +140,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
             color="primary"
             type="submit"
             isLoading={isPending}
+            className='font-semibold'
           >
             Salvar
           </Button>

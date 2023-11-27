@@ -52,7 +52,7 @@ export default function LoginModal() {
                 <Button
                   color="primary"
                   variant="shadow"
-                  className="mt-6"
+                  className="mt-6 font-semibold"
                   isLoading={isLoading}
                   onClick={() => {
                     setIsLoading(true);

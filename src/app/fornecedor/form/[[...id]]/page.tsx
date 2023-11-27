@@ -86,6 +86,7 @@ export default function FornecedorForm({
             color="primary"
             type="submit"
             isLoading={isPending}
+            className='font-semibold'
           >
             Salvar
           </Button>

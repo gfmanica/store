@@ -79,7 +79,7 @@ export default function Fornecedor() {
         <p className="text-2xl font-semibold">Fornecedores</p>
 
         <Link href="/fornecedor/form">
-          <Button variant="shadow" color="primary">
+          <Button variant="shadow" color="primary" className='font-semibold'>
             Inserir
           </Button>
         </Link>

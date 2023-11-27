@@ -40,7 +40,12 @@ export default function ConfirmModal({
             </ModalBody>
 
             <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
+              <Button
+                color="danger"
+                variant="light"
+                onPress={onClose}
+                className="font-semibold"
+              >
                 Fechar
               </Button>
 
@@ -51,6 +56,7 @@ export default function ConfirmModal({
 
                   callbackConfirm();
                 }}
+                className="font-semibold"
               >
                 {labelConfirm || 'Excluir'}
               </Button>

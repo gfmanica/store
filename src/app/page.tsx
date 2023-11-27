@@ -94,7 +94,7 @@ export default function Home() {
         <p className="text-2xl font-semibold">Vendas</p>
 
         <Link href="/form">
-          <Button variant="shadow" color="primary">
+          <Button variant="shadow" color="primary" className='font-semibold'>
             Inserir
           </Button>
         </Link>

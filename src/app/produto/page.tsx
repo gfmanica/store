@@ -95,7 +95,7 @@ export default function Produto() {
         <p className="text-2xl font-semibold">Produtos</p>
 
         <Link href="/produto/form">
-          <Button variant="shadow" color="primary">
+          <Button variant="shadow" color="primary" className='font-semibold'>
             Inserir
           </Button>
         </Link>

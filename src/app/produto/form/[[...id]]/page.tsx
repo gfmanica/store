@@ -116,6 +116,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
             color="primary"
             type="submit"
             isLoading={isPending}
+            className='font-semibold'
           >
             Salvar
           </Button>
