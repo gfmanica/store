@@ -38,18 +38,6 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const connectOrCreateItem = data.item.map((item) => {
-    return {
-      where: { idItem: item.idItem },
-      create: {
-        idItem: item.idItem,
-        qtItem: item.qtItem,
-        vlParcial: item.vlParcial,
-        idProduto: item.produto?.idProduto,
-      },
-    };
-  });
-
   const venda = await prisma.venda.upsert({
     where: { idVenda: data.idVenda || -1 },
     update: {
@@ -80,7 +68,9 @@ export async function POST(request: NextRequest) {
     },
     create: {
       dtVenda: data.dtVenda,
-      idFuncionario: data.funcionario.idFuncionario,
+      funcionario: {
+        connect: { idFuncionario: data.funcionario.idFuncionario },
+      },
       vlTotal: data.vlTotal,
       item: {
         create: data.item.map((item) => {
