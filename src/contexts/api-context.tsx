@@ -14,7 +14,7 @@ export function ApiProvider({ children }: TApiProvider) {
   const { user, password } = useAuthContext();
   const Api = axios.create({
     headers: {
-      datasourceUrl: `postgresql://gfmanica:vZtPQqi1CyU8@ep-broad-mountain-10270954.us-east-2.aws.neon.tech/store?sslmode=require`,
+      datasourceUrl: `postgresql://teste:%23Admin123Admin@ep-broad-mountain-10270954.us-east-2.aws.neon.tech/store?sslmode=require`,
     },
   });
 

@@ -8,46 +8,46 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Fornecedor {
+model fornecedor {
   idFornecedor Int       @id @default(autoincrement())
   dsFornecedor String?   @db.VarChar(45)
-  produto      Produto[]
+  produto      produto[]
 }
 
-model Funcionario {
+model funcionario {
   idFuncionario Int     @id @default(autoincrement())
   dsFuncionario String? @db.VarChar(45)
   nrCpf         String? @db.VarChar(45)
   dsSenha       String? @db.VarChar(50)
   dsFuncao      String? @db.VarChar(50)
-  venda         Venda[]
+  venda         venda[]
 }
 
-model Item {
+model item {
   idItem    Int      @id @default(autoincrement())
   qtItem    Int?
   vlParcial Decimal? @db.Decimal(7, 2)
   idProduto Int?
   idVenda   Int?
-  produto   Produto? @relation(fields: [idProduto], references: [idProduto], onDelete: NoAction, onUpdate: NoAction)
-  venda     Venda?   @relation(fields: [idVenda], references: [idVenda], onDelete: NoAction, onUpdate: NoAction)
+  produto   produto? @relation(fields: [idProduto], references: [idProduto], onDelete: NoAction, onUpdate: NoAction)
+  venda     venda?   @relation(fields: [idVenda], references: [idVenda], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model Produto {
+model produto {
   idProduto    Int         @id @default(autoincrement())
   dsProduto    String?     @db.VarChar(45)
   vlProduto    Decimal?    @db.Decimal(7, 2)
   qtProduto    Int?
   idFornecedor Int?
-  item         Item[]
-  fornecedor   Fornecedor? @relation(fields: [idFornecedor], references: [idFornecedor], onDelete: NoAction, onUpdate: NoAction)
+  item         item[]
+  fornecedor   fornecedor? @relation(fields: [idFornecedor], references: [idFornecedor], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model Venda {
+model venda {
   idVenda       Int          @id @default(autoincrement())
   dtVenda       DateTime?    @default(now())
   vlTotal       Decimal?     @db.Decimal(7, 2)
   idFuncionario Int?
-  item          Item[]
-  funcionario   Funcionario? @relation(fields: [idFuncionario], references: [idFuncionario], onDelete: NoAction, onUpdate: NoAction)
+  item          item[]
+  funcionario   funcionario? @relation(fields: [idFuncionario], references: [idFuncionario], onDelete: NoAction, onUpdate: NoAction)
 }
