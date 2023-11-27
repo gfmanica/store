@@ -17,7 +17,6 @@ export async function GET(request: NextRequest) {
     await prisma.$connect();
     connectionReturn = { status: 200, message: 'Usuário validado com sucesso' };
   } catch (error) {
-    console.log(error);
     connectionReturn = { status: 401, message: 'Usuário ou senha incorretas' };
   } finally {
     prisma.$disconnect();

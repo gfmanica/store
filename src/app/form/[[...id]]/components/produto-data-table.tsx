@@ -65,8 +65,6 @@ export default function ProdutoDataTable({
 }: TProdutoDataTable) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  console.log(data);
-
   const updateTotalValue = () => {
     setValue(
       'vlTotal',
@@ -75,7 +73,6 @@ export default function ProdutoDataTable({
   };
 
   const renderCell = (item: any, columnKey: any): ReactNode => {
-    debugger;
     const index = data.findIndex((produto) => produto.idItem === item.id);
     const cellValue = item[columnKey];
 

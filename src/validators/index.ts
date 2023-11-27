@@ -32,10 +32,10 @@ export const itemZod = z.object({
 
 export const vendaZod = z.object({
   idVenda: z.number().optional(),
-  dtVenda: z.string().datetime(),
+  dtVenda: z.string().min(9),
   vlTotal: z.number().default(0),
   funcionario: z.object({
     idFuncionario: z.number().default(1),
   }),
-  item: z.array(itemZod).default([]),
+  item: z.array(itemZod).min(1).default([]),
 });

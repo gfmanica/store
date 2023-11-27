@@ -2,6 +2,7 @@
 
 import FornecedorFormAutocomplete from '@/components/autocompletes/fornecedor-form-autocomplete';
 import NumberFormField from '@/components/fields/number-form-field';
+import PatternFormField from '@/components/fields/pattern-form-field';
 import TextFormField from '@/components/fields/text-form-field';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
@@ -33,6 +34,9 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     formState: { errors },
   } = useForm<TVendaZod>({
     resolver: zodResolver(vendaZod),
+    defaultValues: {
+      funcionario: { idFuncionario: 1 },
+    },
   });
 
   const { data, isFetching } = useQuery<TVendaZod>({
@@ -48,7 +52,10 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
       data.item.forEach((item) => {
         item.vlParcial = Number(item.vlParcial);
       });
-      
+      debugger;
+      data.dtVenda = new Date(data.dtVenda).toLocaleDateString();
+      data.funcionario = { idFuncionario: 1 };
+
       reset(data);
     }
   }, [data]);
@@ -72,8 +79,6 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     },
   });
 
-  console.log(errors);
-
   const addProduto = () => {
     const items = getValues('item') || [];
 
@@ -91,21 +96,31 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     setValue('item', [...items, newItem]);
   };
 
+  const formatData = (data: TVendaZod) => {
+    debugger;
+    const newData = { ...data };
+    const [day, month, year] = newData.dtVenda.split('/');
+
+    newData.dtVenda = new Date(`${year}-${month}-${day}`).toISOString();
+
+    mutate(newData);
+  };
+
   return (
     <>
       <p className="text-2xl font-semibold">
         {idVenda ? 'Editar' : 'Cadastrar'} venda
       </p>
 
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={handleSubmit((data) => mutate(data))}
-      >
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(formatData)}>
         <div className="flex gap-4">
-          <TextFormField<TVendaZod>
+          <PatternFormField<TVendaZod>
             control={control}
             label="Data da venda"
             name="dtVenda"
+            mask="_"
+            format="##/##/####"
+            allowEmptyFormatting
             error={errors.dtVenda}
           />
 
