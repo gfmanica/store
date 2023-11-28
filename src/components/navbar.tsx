@@ -14,13 +14,15 @@ export default function Navbar() {
           <Link href="/fornecedor">
             <p className="hover:font-semibold transition-all">Fornecedores</p>
           </Link>
-
           <Link href="/produto">
             <p className="hover:font-semibold transition-all">Produtos</p>
           </Link>
-
           <Link href="/">
             <p className="hover:font-semibold transition-all">Vendas</p>
+          </Link>
+
+          <Link href="/funcionario">
+            <p className="hover:font-semibold transition-all">Funcionários</p>
           </Link>
         </div>
       </div>

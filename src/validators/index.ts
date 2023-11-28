@@ -39,3 +39,11 @@ export const vendaZod = z.object({
   }),
   item: z.array(itemZod).min(1).default([]),
 });
+
+export const funcionarioZod = z.object({
+  idFuncionario: z.number().optional(),
+  dsFuncionario: z.string(),
+  nrCpf: z.string(),
+  dsFuncao: z.string(),
+  dsSenha: z.string(),
+});

@@ -1,4 +1,10 @@
-import { fornecedorZod, itemZod, produtoZod, vendaZod } from '@/validators/index';
+import {
+  fornecedorZod,
+  funcionarioZod,
+  itemZod,
+  produtoZod,
+  vendaZod,
+} from '@/validators/index';
 import z from 'zod';
 
 export type TConnection = {
@@ -46,3 +52,12 @@ export type TProdutoReturn = {
 export type TProdutoZod = z.infer<typeof produtoZod>;
 
 export type TItemZod = z.infer<typeof itemZod>;
+
+export type TFuncionarioZod = z.infer<typeof funcionarioZod>;
+
+export type TFuncionario = {
+  idFuncionario: number;
+  dsFuncionario: string;
+  dsFuncao: string;
+  nrCpf: string;
+};
