@@ -2,6 +2,7 @@ import { Api } from '@/lib/axios';
 import { TConnection } from '@/types';
 import { useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
 import {
   createContext,
@@ -26,6 +27,7 @@ type TAuthContext = {
   validateDBConnection: () => Promise<void>;
   isOpen: boolean;
   onClose: () => void;
+  logout: () => void;
 };
 
 type TAuthProvider = {
@@ -37,14 +39,15 @@ const AuthContext = createContext<TAuthContext>({} as TAuthContext);
 export function AuthProvider({ children }: TAuthProvider) {
   const [user, setUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { replace } = useRouter();
 
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     onOpen();
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      onOpen();
+    }
+  }, [isAuthenticated]);
 
   const { refetch } = useQuery<TConnection>({
     queryKey: ['getValidationAuth'],
@@ -72,6 +75,13 @@ export function AuthProvider({ children }: TAuthProvider) {
     });
   }, []);
 
+  const logout = useCallback(() => {
+    setUser('');
+    setPassword('');
+    setIsAuthenticated(false);
+    replace('/');
+  }, []);
+
   const contextValue = useMemo(
     () => ({
       user,
@@ -83,6 +93,7 @@ export function AuthProvider({ children }: TAuthProvider) {
       setIsAuthenticated,
       isOpen,
       onClose,
+      logout,
     }),
     [user, password, isAuthenticated, isOpen]
   );

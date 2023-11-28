@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const password = headers.get('password');
 
   const prisma = new PrismaClient({
-    datasourceUrl: `postgres://${user}:${password}@ep-twilight-scene-54661059-pooler.us-east-1.postgres.vercel-storage.com:5432/verceldb?pgbouncer=true&connect_timeout=15`,
+    datasourceUrl: `postgres://${user}:${password}@ep-broad-mountain-10270954.us-east-2.aws.neon.tech/store?sslmode=require`,
   });
 
   let connectionReturn: TConnection;

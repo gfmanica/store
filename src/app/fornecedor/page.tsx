@@ -8,6 +8,7 @@ import { TFornecedor } from '@/types/index';
 import { Button, Link, Tooltip } from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
+import { useRouter } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
 import { ReactNode } from 'react';
 import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
@@ -37,6 +38,7 @@ const columns = [
 export default function Fornecedor() {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
+  const { push } = useRouter();
 
   const { data, isFetching, refetch } = useQuery<TFornecedor[]>({
     queryKey: ['getFornecedores'],
@@ -78,11 +80,14 @@ export default function Fornecedor() {
       <div className="flex justify-between">
         <p className="text-2xl font-semibold">Fornecedores</p>
 
-        <Link href="/fornecedor/form">
-          <Button variant="shadow" color="primary" className='font-semibold'>
-            Inserir
-          </Button>
-        </Link>
+        <Button
+          variant="shadow"
+          color="primary"
+          className="font-semibold"
+          onClick={() => push('/fornecedor/form')}
+        >
+          Inserir
+        </Button>
       </div>
 
       <DataTable

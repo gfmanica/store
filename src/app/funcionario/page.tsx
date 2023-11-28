@@ -7,6 +7,7 @@ import { useAuthContext } from '@/contexts/auth-context';
 import { TFuncionario } from '@/types/index';
 import { Button, Link } from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
 import { ReactNode } from 'react';
 
@@ -45,6 +46,7 @@ const columns = [
 export default function Funcionario() {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
+  const { push } = useRouter();
 
   const { data, isFetching, refetch } = useQuery<TFuncionario[]>({
     queryKey: ['getFuncionarios'],
@@ -86,11 +88,14 @@ export default function Funcionario() {
       <div className="flex justify-between">
         <p className="text-2xl font-semibold">Funcionários</p>
 
-        <Link href="/funcionario/form">
-          <Button variant="shadow" color="primary" className="font-semibold">
+          <Button
+            variant="shadow"
+            color="primary"
+            className="font-semibold"
+            onClick={() => push('/funcionario/form')}
+          >
             Inserir
           </Button>
-        </Link>
       </div>
 
       <DataTable

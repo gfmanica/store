@@ -11,6 +11,7 @@ import DataTable from '@/components/table/data-table';
 import { enqueueSnackbar } from 'notistack';
 import ActionColumnTable from '@/components/table/action-column-table';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const getRows = (data: TVenda[] | undefined) => {
   if (data) {
@@ -52,8 +53,13 @@ const columns = [
 export default function Home() {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
+  const { push } = useRouter();
 
-  const { data = [], isFetching, refetch } = useQuery<TVenda[]>({
+  const {
+    data = [],
+    isFetching,
+    refetch,
+  } = useQuery<TVenda[]>({
     queryKey: ['geTVenda'],
     queryFn: () => Api.get('/api/venda').then((res) => res.data),
     retry: false,
@@ -93,13 +99,15 @@ export default function Home() {
       <div className="flex justify-between">
         <p className="text-2xl font-semibold">Vendas</p>
 
-        <Link href="/form">
-          <Button variant="shadow" color="primary" className='font-semibold'>
-            Inserir
-          </Button>
-        </Link>
+        <Button
+          variant="shadow"
+          color="primary"
+          className="font-semibold"
+          onClick={() => push('/form')}
+        >
+          Inserir
+        </Button>
       </div>
-
 
       <DataTable
         columns={columns}

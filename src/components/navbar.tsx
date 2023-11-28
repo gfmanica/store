@@ -1,6 +1,11 @@
+'use client';
+
+import { useAuthContext } from '@/contexts/auth-context';
 import Link from 'next/link';
 
 export default function Navbar() {
+  const { logout } = useAuthContext();
+
   return (
     <header className="bg-gradient-to-r from-sky-100 to-indigo-200 gap-2 flex flex-col items-center rounded-2xl mt-2 mb-4 md:mb-8 mx-2 md:px-12 p-3  shadow-md">
       <div className="w-full flex items-center justify-between">
@@ -24,6 +29,10 @@ export default function Navbar() {
           <Link href="/funcionario">
             <p className="hover:font-semibold transition-all">Funcionários</p>
           </Link>
+
+          <p className="hover:font-semibold transition-all hover:cursor-pointer" onClick={logout}>
+            Sair
+          </p>
         </div>
       </div>
     </header>

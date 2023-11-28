@@ -9,6 +9,7 @@ import { money } from '@/utils/format';
 import { Button, Tooltip } from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
 import { ReactNode } from 'react';
 import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
@@ -53,6 +54,7 @@ const columns = [
 export default function Produto() {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
+  const { push } = useRouter();
 
   const { data, isFetching, refetch } = useQuery<TProduto[]>({
     queryKey: ['getTProduto'],
@@ -94,11 +96,14 @@ export default function Produto() {
       <div className="flex justify-between">
         <p className="text-2xl font-semibold">Produtos</p>
 
-        <Link href="/produto/form">
-          <Button variant="shadow" color="primary" className='font-semibold'>
-            Inserir
-          </Button>
-        </Link>
+        <Button
+          variant="shadow"
+          color="primary"
+          className="font-semibold"
+          onClick={() => push('/produto/form')}
+        >
+          Inserir
+        </Button>
       </div>
 
       <DataTable
