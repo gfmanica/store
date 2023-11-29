@@ -35,7 +35,7 @@ export const vendaZod = z.object({
   dtVenda: z.string().min(9),
   vlTotal: z.number().default(0),
   funcionario: z.object({
-    idFuncionario: z.number().default(1),
+    dsFuncionario: z.string(),
   }),
   item: z.array(itemZod).min(1).default([]),
 });

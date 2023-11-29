@@ -23,6 +23,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
   const Api = useApiContext();
   const idVenda = params?.id?.[0];
   const { push } = useRouter();
+  const { user } = useAuthContext();
 
   const {
     control,
@@ -35,7 +36,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
   } = useForm<TVendaZod>({
     resolver: zodResolver(vendaZod),
     defaultValues: {
-      funcionario: { idFuncionario: 1 },
+      funcionario: { dsFuncionario: user },
     },
   });
 
@@ -54,7 +55,6 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
       });
 
       data.dtVenda = new Date(data.dtVenda).toLocaleDateString();
-      data.funcionario = { idFuncionario: 1 };
 
       reset(data);
     }

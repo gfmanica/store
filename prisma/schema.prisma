@@ -16,7 +16,7 @@ model fornecedor {
 
 model funcionario {
   idFuncionario Int     @id @default(autoincrement())
-  dsFuncionario String? @db.VarChar(45)
+  dsFuncionario String? @unique @db.VarChar(45)
   nrCpf         String? @db.VarChar(45)
   dsSenha       String? @db.VarChar(50)
   dsFuncao      String? @db.VarChar(50)

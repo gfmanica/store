@@ -42,7 +42,9 @@ export async function POST(request: NextRequest) {
     where: { idVenda: data.idVenda || -1 },
     update: {
       dtVenda: data.dtVenda,
-      idFuncionario: data.funcionario.idFuncionario,
+      funcionario: {
+        connect: { dsFuncionario: data.funcionario.dsFuncionario },
+      },
       vlTotal: data.vlTotal,
       item: {
         upsert: data.item.map((item) => {
@@ -69,7 +71,7 @@ export async function POST(request: NextRequest) {
     create: {
       dtVenda: data.dtVenda,
       funcionario: {
-        connect: { idFuncionario: data.funcionario.idFuncionario },
+        connect: { dsFuncionario: data.funcionario.dsFuncionario },
       },
       vlTotal: data.vlTotal,
       item: {
