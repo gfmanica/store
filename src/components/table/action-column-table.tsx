@@ -3,6 +3,7 @@ import React from 'react';
 import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 import ConfirmModal from '../modals/confirm-modal';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 type TActionColumnTable = {
   callbackConfirm: () => void;
@@ -13,6 +14,7 @@ export default function ActionColumnTable({
   callbackConfirm,
   href,
 }: TActionColumnTable) {
+  const { push } = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -24,13 +26,14 @@ export default function ActionColumnTable({
       />
 
       <div className="relative flex items-center gap-2">
-        <Link href={href}>
-          <Tooltip placement="left" content="Editar">
-            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-              <MdOutlineEdit size={22} />
-            </span>
-          </Tooltip>
-        </Link>
+        <Tooltip placement="left" content="Editar">
+          <span
+            className="text-lg text-default-400 cursor-pointer active:opacity-50"
+            onClick={() => push(href)}
+          >
+            <MdOutlineEdit size={22} />
+          </span>
+        </Tooltip>
 
         <Tooltip placement="right" color="danger" content="Excluir">
           <span
