@@ -37,7 +37,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
     resolver: zodResolver(produtoZod),
   });
 
-  const { data, isFetching, error } = useQuery<TResponse<TProduto>>({
+  const { data, isFetching } = useQuery<TResponse<TProduto>>({
     queryKey: ['getProduto'],
     queryFn: () => Api.get(`/api/produto/${idProduto}`).then((res) => res.data),
     retry: false,
@@ -46,14 +46,14 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
   });
 
   useEffect(() => {
-    if (error) {
+    if (data?.status === 400) {
       enqueueSnackbar('Você não possui permissão para editar o produto', {
         variant: 'error',
       });
     }
-  }, [error]);
 
-  useEffect(() => (data ? reset(data?.data) : undefined), [data]);
+    data ? reset(data?.data) : undefined;
+  }, [data]);
 
   const { mutate, isPending } = useMutation<
     AxiosResponse<TResponse<TProdutoReturn>>,

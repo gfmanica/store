@@ -48,18 +48,15 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     enabled: isAuthenticated && !!idVenda,
   });
 
+  console.log(errors);
+
   useEffect(() => {
-    if (error) {
+    if (data?.status === 400) {
       enqueueSnackbar('Você não possui permissão para editar a venda', {
         variant: 'error',
       });
     }
-  }, [error]);
 
-  console.log(errors);
-
-  useEffect(() => {
-    debugger;
     if (data?.data) {
       data.data.item.forEach((item) => {
         item.vlParcial = Number(item.vlParcial);

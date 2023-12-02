@@ -43,14 +43,14 @@ export default function FornecedorForm({
   });
 
   useEffect(() => {
-    if (error) {
+    if (data?.status === 400) {
       enqueueSnackbar('Você não possui permissão para editar o fornecedor', {
         variant: 'error',
       });
     }
-  }, [error]);
 
-  useEffect(() => (data ? reset(data?.data) : undefined), [data]);
+    data?.data ? reset(data?.data) : undefined;
+  }, [data]);
 
   const { mutate, isPending } = useMutation<
     AxiosResponse<TResponse<TFornecedorZod>>,

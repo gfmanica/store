@@ -54,14 +54,14 @@ export default function FuncionarioForm({
   });
 
   useEffect(() => {
-    if (error) {
-      enqueueSnackbar('Você não possui permissão para editar o produto', {
+    if (data?.status === 400) {
+      enqueueSnackbar('Você não possui permissão para editar o funcionário', {
         variant: 'error',
       });
     }
-  }, [error]);
 
-  useEffect(() => (data ? reset(data?.data) : undefined), [data]);
+    data?.data ? reset(data?.data) : undefined;
+  }, [data]);
 
   const { mutate, isPending } = useMutation<
     AxiosResponse<TResponse<TFuncionario>>,

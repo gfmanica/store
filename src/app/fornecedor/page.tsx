@@ -40,7 +40,9 @@ export default function Fornecedor() {
   const Api = useApiContext();
   const { push } = useRouter();
 
-  const { data, isFetching, refetch, error } = useQuery<TResponse<TFornecedor[]>>({
+  const { data, isFetching, refetch, error } = useQuery<
+    TResponse<TFornecedor[]>
+  >({
     queryKey: ['getFornecedores'],
     queryFn: () => Api.get('/api/fornecedor').then((res) => res.data),
     retry: false,
@@ -48,12 +50,12 @@ export default function Fornecedor() {
   });
 
   useEffect(() => {
-    if (error) {
-      enqueueSnackbar('Você não possui permissão para visualizar os produtos', {
+    if (data?.status === 400) {
+      enqueueSnackbar('Você não possui permissão para visualizar os fornecedores', {
         variant: 'error',
       });
     }
-  }, [error]);
+  }, [data]);
 
   const { mutate } = useMutation<
     AxiosResponse<TResponse<TFornecedor[]>>,

@@ -57,7 +57,7 @@ export default function Produto() {
   const Api = useApiContext();
   const { push } = useRouter();
 
-  const { data, isFetching, refetch, error } = useQuery<TResponse<TProduto[]>>({
+  const { data, isFetching, refetch } = useQuery<TResponse<TProduto[]>>({
     queryKey: ['getTProduto'],
     queryFn: () => Api.get('/api/produto').then((res) => res.data),
     retry: false,
@@ -65,12 +65,12 @@ export default function Produto() {
   });
 
   useEffect(() => {
-    if (error) {
-      enqueueSnackbar('Você não possui permissão para visualizar os produtos', {
+    if (data?.status === 400) {
+      enqueueSnackbar('Você não possui permissão para visualizar o produto', {
         variant: 'error',
       });
     }
-  }, [error]);
+  }, [data]);
 
   const { mutate } = useMutation<
     AxiosResponse<TResponse<TProduto[]>>,

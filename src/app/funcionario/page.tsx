@@ -59,7 +59,7 @@ export default function Funcionario() {
   });
 
   useEffect(() => {
-    if (error) {
+    if (data?.status === 400) {
       enqueueSnackbar(
         'Você não possui permissão para visualizar os funcionários',
         {
@@ -67,7 +67,7 @@ export default function Funcionario() {
         }
       );
     }
-  }, [error]);
+  }, [data]);
 
   const { mutate } = useMutation<
     AxiosResponse<TResponse<TFuncionario[]>>,
