@@ -7,8 +7,10 @@ export async function GET(request: NextRequest) {
   const user = headers.get('user');
   const password = headers.get('password');
 
+  
+
   const prisma = new PrismaClient({
-    datasourceUrl: `postgres://${user}:${password}@ep-broad-mountain-10270954.us-east-2.aws.neon.tech/store?sslmode=require`,
+    datasourceUrl: `postgres://${user}:${password}@ep-divine-dew-61652658.us-east-2.aws.neon.tech/taste-horizon?sslmode=require`,
   });
 
   let connectionReturn: TConnection;

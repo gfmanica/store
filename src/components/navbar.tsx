@@ -1,10 +1,11 @@
 'use client';
 
 import { useAuthContext } from '@/contexts/auth-context';
+import { Divider } from '@nextui-org/react';
 import Link from 'next/link';
 
 export default function Navbar() {
-  const { logout } = useAuthContext();
+  const { logout, user } = useAuthContext();
 
   return (
     <header className="bg-gradient-to-r from-sky-100 to-indigo-200 gap-2 flex flex-col items-center rounded-2xl mt-2 mb-4 md:mb-8 mx-2 md:px-12 p-3  shadow-md">
@@ -30,7 +31,16 @@ export default function Navbar() {
             <p className="hover:font-semibold transition-all">Funcionários</p>
           </Link>
 
-          <p className="hover:font-semibold transition-all hover:cursor-pointer" onClick={logout}>
+          <Divider orientation="vertical" className="h-4" />
+
+          <p>
+            Funcionário: <strong>{user}</strong>
+          </p>
+
+          <p
+            className="hover:font-semibold transition-all hover:cursor-pointer"
+            onClick={logout}
+          >
             Sair
           </p>
         </div>

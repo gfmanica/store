@@ -49,7 +49,10 @@ export default function FornecedorForm({
     AxiosError,
     TFornecedorZod
   >({
-    mutationFn: (data) => Api.post('/api/fornecedor', data),
+    mutationFn: (data) =>
+      idFornecedor
+        ? Api.put('/api/fornecedor', data)
+        : Api.post('/api/fornecedor', data),
     onSuccess: (data) => {
       let message = 'Fornecedor salvo com sucesso!';
 
@@ -86,7 +89,7 @@ export default function FornecedorForm({
             color="primary"
             type="submit"
             isLoading={isPending}
-            className='font-semibold'
+            className="font-semibold"
           >
             Salvar
           </Button>

@@ -38,9 +38,42 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const venda = await prisma.venda.upsert({
-    where: { idVenda: data.idVenda || -1 },
-    update: {
+  const venda = await prisma.venda.create({
+    data: {
+      dtVenda: data.dtVenda,
+      funcionario: {
+        connect: { dsFuncionario: data.funcionario.dsFuncionario },
+      },
+      vlTotal: data.vlTotal,
+      item: {
+        create: data.item.map((item) => {
+          return {
+            qtItem: item.qtItem,
+            vlParcial: item.vlParcial,
+            produto: {
+              connect: { idProduto: item.produto?.idProduto },
+            },
+          };
+        }),
+      },
+    },
+  });
+
+  prisma.$disconnect();
+
+  return NextResponse.json(venda);
+}
+
+export async function PUT(request: NextRequest) {
+  const data: TVendaZod = await request.json();
+  const { headers } = request;
+  const datasourceUrl = headers.get('datasourceUrl') || '';
+
+  const prisma = new PrismaClient({ datasourceUrl });
+
+  const venda = await prisma.venda.update({
+    where: { idVenda: data.idVenda },
+    data: {
       dtVenda: data.dtVenda,
       funcionario: {
         connect: { dsFuncionario: data.funcionario.dsFuncionario },
@@ -63,24 +96,6 @@ export async function POST(request: NextRequest) {
               produto: {
                 connect: { idProduto: item.produto?.idProduto },
               },
-            },
-          };
-        }),
-      },
-    },
-    create: {
-      dtVenda: data.dtVenda,
-      funcionario: {
-        connect: { dsFuncionario: data.funcionario.dsFuncionario },
-      },
-      vlTotal: data.vlTotal,
-      item: {
-        create: data.item.map((item) => {
-          return {
-            qtItem: item.qtItem,
-            vlParcial: item.vlParcial,
-            produto: {
-              connect: { idProduto: item.produto?.idProduto },
             },
           };
         }),

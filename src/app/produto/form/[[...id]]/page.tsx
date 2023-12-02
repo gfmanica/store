@@ -51,7 +51,10 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
     AxiosError,
     TProdutoZod
   >({
-    mutationFn: (data) => Api.post('/api/produto', data),
+    mutationFn: (data) =>
+      idProduto
+        ? Api.put('/api/produto', data)
+        : Api.post('/api/produto', data),
     onSuccess: (data) => {
       let message = 'Produto salvo com sucesso!';
 
@@ -116,7 +119,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
             color="primary"
             type="submit"
             isLoading={isPending}
-            className='font-semibold'
+            className="font-semibold"
           >
             Salvar
           </Button>

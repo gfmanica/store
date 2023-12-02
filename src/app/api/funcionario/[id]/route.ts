@@ -42,7 +42,7 @@ export async function DELETE(
       where: { idFuncionario: Number(params.id) },
     });
 
-    // await prisma.$queryRawUnsafe(`DROP USER ${funcionario?.dsFuncionario}`);
+    await prisma.$executeRawUnsafe(`DROP USER ${funcionario?.dsFuncionario}`);
 
     await prisma.funcionario.delete({
       where: { idFuncionario: Number(params.id) },

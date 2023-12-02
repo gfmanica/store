@@ -65,7 +65,16 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     AxiosError,
     TVendaZod
   >({
-    mutationFn: (data) => Api.post('/api/venda', data),
+    mutationFn: (data) =>
+      idVenda
+        ? Api.put('/api/venda', {
+            ...data,
+            funcionario: { dsFuncionario: user },
+          })
+        : Api.post('/api/venda', {
+            ...data,
+            funcionario: { dsFuncionario: user },
+          }),
     onSuccess: (data) => {
       let message = 'Venda salva com sucesso!';
 

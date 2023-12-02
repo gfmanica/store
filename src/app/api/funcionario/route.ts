@@ -30,11 +30,17 @@ export async function POST(request: NextRequest) {
   const prisma = new PrismaClient({ datasourceUrl });
 
   try {
-    // await prisma.$queryRawUnsafe(
-    //   `CREATE USER ${data.dsFuncionario} PASSWORD '${data.dsSenha}';
-    //   GRANT ${data.dsFuncao} TO ${data.dsFuncionario};
-    //   `
-    // );
+    console.log(
+      `CREATE USER ${data.dsFuncionario} PASSWORD '${data.dsSenha}'; `
+    );
+
+    await prisma.$executeRawUnsafe(
+      `CREATE USER ${data.dsFuncionario} PASSWORD '${data.dsSenha}';`
+    );
+
+    await prisma.$executeRawUnsafe(
+      `GRANT ${data.dsFuncao} TO ${data.dsFuncionario};`
+    );
 
     const produtos = await prisma.funcionario.create({
       data: {
@@ -65,15 +71,22 @@ export async function PUT(request: NextRequest) {
   const prisma = new PrismaClient({ datasourceUrl });
 
   try {
-    // const funcionario = await prisma.funcionario.findUnique({
-    //   where: { idFuncionario: data.idFuncionario },
-    // });
+    const funcionario = await prisma.funcionario.findUnique({
+      where: { idFuncionario: data.idFuncionario },
+    });
 
-    // await prisma.$queryRawUnsafe(
-    //   `ALTER USER ${data.dsFuncionario} WITH PASSWORD '${data.dsSenha}';
-    //    REVOKE ${funcionario?.dsFuncao} FROM ${data.dsFuncionario};
-    //    GRANT ${data.dsFuncao} TO ${data.dsFuncionario};
-    //   `
+    // await prisma.$executeRawUnsafe(
+    //   `ALTER USER ${data.dsFuncionario} WITH PASSWORD '${data.dsSenha}'; `
+    // );
+
+    // console.log(`REVOKE ${funcionario?.dsFuncao} FROM ${data.dsFuncionario};`);
+
+    // await prisma.$executeRawUnsafe(
+    //   `REVOKE ${funcionario?.dsFuncao} FROM ${data.dsFuncionario};`
+    // );
+
+    // await prisma.$executeRawUnsafe(
+    //   `GRANT ${data.dsFuncao} TO ${data.dsFuncionario}; `
     // );
 
     const produtos = await prisma.funcionario.update({

@@ -30,15 +30,30 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const produtos = await prisma.produto.upsert({
-    where: { idProduto: data.idProduto || -1 },
-    update: {
+  const produtos = await prisma.produto.create({
+    data: {
       dsProduto: data.dsProduto,
       qtProduto: data.qtProduto,
       vlProduto: data.vlProduto,
       fornecedor: { connect: { idFornecedor: data.fornecedor.idFornecedor } },
     },
-    create: {
+  });
+
+  prisma.$disconnect();
+
+  return NextResponse.json(produtos);
+}
+
+export async function PUT(request: NextRequest) {
+  const data: TProdutoZod = await request.json();
+  const { headers } = request;
+  const datasourceUrl = headers.get('datasourceUrl') || '';
+
+  const prisma = new PrismaClient({ datasourceUrl });
+
+  const produtos = await prisma.produto.update({
+    where: { idProduto: data.idProduto },
+    data: {
       dsProduto: data.dsProduto,
       qtProduto: data.qtProduto,
       vlProduto: data.vlProduto,

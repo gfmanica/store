@@ -31,10 +31,25 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const fornecedor = await prisma.fornecedor.upsert({
-    where: { idFornecedor: data.idFornecedor || -1 },
-    update: { dsFornecedor: data.dsFornecedor },
-    create: data,
+  const fornecedor = await prisma.fornecedor.create({
+    data,
+  });
+
+  prisma.$disconnect();
+
+  return NextResponse.json(fornecedor);
+}
+
+export async function PUT(request: NextRequest) {
+  const data: TFornecedorZod = await request.json();
+  const { headers } = request;
+  const datasourceUrl = headers.get('datasourceUrl') || '';
+
+  const prisma = new PrismaClient({ datasourceUrl });
+
+  const fornecedor = await prisma.fornecedor.update({
+    where: { idFornecedor: data.idFornecedor },
+    data,
   });
 
   prisma.$disconnect();
