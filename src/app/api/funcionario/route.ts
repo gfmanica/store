@@ -8,18 +8,26 @@ export async function GET(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const funcionarios = await prisma.funcionario.findMany({
-    select: {
-      idFuncionario: true,
-      dsFuncionario: true,
-      dsFuncao: true,
-      nrCpf: true,
-    },
-  });
+  let retorno;
 
-  prisma.$disconnect();
+  try {
+    const funcionarios = await prisma.funcionario.findMany({
+      select: {
+        idFuncionario: true,
+        dsFuncionario: true,
+        dsFuncao: true,
+        nrCpf: true,
+      },
+    });
 
-  return NextResponse.json(funcionarios);
+    retorno = { status: 200, data: funcionarios };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
+
+    return NextResponse.json(retorno);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -29,11 +37,9 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  try {
-    console.log(
-      `CREATE USER ${data.dsFuncionario} PASSWORD '${data.dsSenha}'; `
-    );
+  let retorno;
 
+  try {
     await prisma.$executeRawUnsafe(
       `CREATE USER ${data.dsFuncionario} PASSWORD '${data.dsSenha}';`
     );
@@ -42,7 +48,7 @@ export async function POST(request: NextRequest) {
       `GRANT ${data.dsFuncao} TO ${data.dsFuncionario};`
     );
 
-    const produtos = await prisma.funcionario.create({
+    const funcionarios = await prisma.funcionario.create({
       data: {
         dsFuncao: data.dsFuncao,
         dsFuncionario: data.dsFuncionario,
@@ -51,60 +57,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log(produtos);
-
-    prisma.$disconnect();
-
-    return NextResponse.json(produtos);
+    retorno = { status: 200, data: funcionarios };
   } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
     prisma.$disconnect();
 
-    return NextResponse.json({});
-  }
-}
-
-export async function PUT(request: NextRequest) {
-  const data: TFuncionarioZod = await request.json();
-  const { headers } = request;
-  const datasourceUrl = headers.get('datasourceUrl') || '';
-
-  const prisma = new PrismaClient({ datasourceUrl });
-
-  try {
-    const funcionario = await prisma.funcionario.findUnique({
-      where: { idFuncionario: data.idFuncionario },
-    });
-
-    // await prisma.$executeRawUnsafe(
-    //   `ALTER USER ${data.dsFuncionario} WITH PASSWORD '${data.dsSenha}'; `
-    // );
-
-    // console.log(`REVOKE ${funcionario?.dsFuncao} FROM ${data.dsFuncionario};`);
-
-    // await prisma.$executeRawUnsafe(
-    //   `REVOKE ${funcionario?.dsFuncao} FROM ${data.dsFuncionario};`
-    // );
-
-    // await prisma.$executeRawUnsafe(
-    //   `GRANT ${data.dsFuncao} TO ${data.dsFuncionario}; `
-    // );
-
-    const produtos = await prisma.funcionario.update({
-      where: { idFuncionario: data.idFuncionario },
-      data: {
-        dsFuncao: data.dsFuncao,
-        dsFuncionario: data.dsFuncionario,
-        dsSenha: data.dsSenha,
-        nrCpf: data.nrCpf,
-      },
-    });
-
-    prisma.$disconnect();
-
-    return NextResponse.json(produtos);
-  } catch (e) {
-    prisma.$disconnect();
-
-    return NextResponse.json({});
+    return NextResponse.json(retorno);
   }
 }

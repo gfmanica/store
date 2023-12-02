@@ -3,7 +3,7 @@
 import TextFormField from '@/components/fields/text-form-field';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
-import { TFornecedor, TFornecedorZod } from '@/types/index';
+import { TFornecedor, TFornecedorZod, TResponse } from '@/types/index';
 import { fornecedorZod } from '@/validators/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input } from '@nextui-org/react';
@@ -33,7 +33,7 @@ export default function FornecedorForm({
     resolver: zodResolver(fornecedorZod),
   });
 
-  const { data, isFetching } = useQuery<TFornecedor>({
+  const { data, isFetching, error } = useQuery<TResponse<TFornecedor>>({
     queryKey: ['getFornecedor'],
     queryFn: () =>
       Api.get(`/api/fornecedor/${idFornecedor}`).then((res) => res.data),
@@ -42,10 +42,18 @@ export default function FornecedorForm({
     enabled: isAuthenticated && !!idFornecedor,
   });
 
-  useEffect(() => (data ? reset(data) : undefined), [data]);
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Você não possui permissão para editar o fornecedor', {
+        variant: 'error',
+      });
+    }
+  }, [error]);
+
+  useEffect(() => (data ? reset(data?.data) : undefined), [data]);
 
   const { mutate, isPending } = useMutation<
-    AxiosResponse<TFornecedorZod>,
+    AxiosResponse<TResponse<TFornecedorZod>>,
     AxiosError,
     TFornecedorZod
   >({
@@ -54,15 +62,21 @@ export default function FornecedorForm({
         ? Api.put('/api/fornecedor', data)
         : Api.post('/api/fornecedor', data),
     onSuccess: (data) => {
-      let message = 'Fornecedor salvo com sucesso!';
+      if (data.data.status === 400) {
+        enqueueSnackbar('Você não possui permissão para editar o fornecedor', {
+          variant: 'error',
+        });
+      } else {
+        let message = 'Fornecedor salvo com sucesso!';
 
-      if (!idFornecedor) {
-        push(`/fornecedor/form/${data.data.idFornecedor}`);
+        if (!idFornecedor) {
+          push(`/fornecedor/form/${data.data.data.idFornecedor}`);
 
-        message = 'Fornecedor criado com sucesso!';
+          message = 'Fornecedor criado com sucesso!';
+        }
+
+        enqueueSnackbar(message, { variant: 'success' });
       }
-
-      enqueueSnackbar(message, { variant: 'success' });
     },
   });
 

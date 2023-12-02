@@ -4,12 +4,13 @@ import ActionColumnTable from '@/components/table/action-column-table';
 import DataTable from '@/components/table/data-table';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
-import { TFuncionario } from '@/types/index';
+import { TFuncionario, TResponse } from '@/types/index';
 import { Button, Link } from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
 import { useRouter } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 const getRows = (data: TFuncionario[] | undefined) => {
   if (data) {
@@ -48,21 +49,47 @@ export default function Funcionario() {
   const Api = useApiContext();
   const { push } = useRouter();
 
-  const { data, isFetching, refetch } = useQuery<TFuncionario[]>({
+  const { data, isFetching, refetch, error } = useQuery<
+    TResponse<TFuncionario[]>
+  >({
     queryKey: ['getFuncionarios'],
     queryFn: () => Api.get('/api/funcionario').then((res) => res.data),
     retry: false,
     enabled: isAuthenticated,
   });
 
-  const { mutate } = useMutation({
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar(
+        'Você não possui permissão para visualizar os funcionários',
+        {
+          variant: 'error',
+        }
+      );
+    }
+  }, [error]);
+
+  const { mutate } = useMutation<
+    AxiosResponse<TResponse<TFuncionario[]>>,
+    AxiosError,
+    string
+  >({
     mutationFn: (data: string) => Api.delete(`/api/funcionario/${data}`),
     onSuccess: (data) => {
-      enqueueSnackbar('Funcionário excluído com sucesso!', {
-        variant: 'success',
-      });
+      if (data.data.status === 400) {
+        enqueueSnackbar(
+          'Você não possui permissão para excluir o funcionário',
+          {
+            variant: 'error',
+          }
+        );
+      } else {
+        enqueueSnackbar('Funcionario excluído com sucesso!', {
+          variant: 'success',
+        });
 
-      refetch();
+        refetch();
+      }
     },
   });
 
@@ -88,20 +115,20 @@ export default function Funcionario() {
       <div className="flex justify-between">
         <p className="text-2xl font-semibold">Funcionários</p>
 
-          <Button
-            variant="shadow"
-            color="primary"
-            className="font-semibold"
-            onClick={() => push('/funcionario/form')}
-          >
-            Inserir
-          </Button>
+        <Button
+          variant="shadow"
+          color="primary"
+          className="font-semibold"
+          onClick={() => push('/funcionario/form')}
+        >
+          Inserir
+        </Button>
       </div>
 
       <DataTable
         columns={columns}
         isFetching={isFetching}
-        rows={getRows(data)}
+        rows={getRows(data?.data)}
         renderCell={renderCell}
       />
     </>

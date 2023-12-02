@@ -10,29 +10,36 @@ export async function GET(
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const venda = await prisma.venda.findUnique({
-    select: {
-      idVenda: true,
-      dtVenda: true,
-      vlTotal: true,
-      funcionario: true,
-      item: {
-        select: {
-          idItem: true,
-          produto: true,
-          qtItem: true,
-          vlParcial: true,
+  let retorno;
+
+  try {
+    const venda = await prisma.venda.findUnique({
+      select: {
+        idVenda: true,
+        dtVenda: true,
+        vlTotal: true,
+        item: {
+          select: {
+            idItem: true,
+            produto: true,
+            qtItem: true,
+            vlParcial: true,
+          },
         },
       },
-    },
-    where: {
-      idVenda: Number(params.id),
-    },
-  });
+      where: {
+        idVenda: Number(params.id),
+      },
+    });
 
-  prisma.$disconnect();
+    retorno = { status: 200, data: venda };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
 
-  return NextResponse.json(venda);
+    return NextResponse.json(retorno);
+  }
 }
 
 export async function DELETE(
@@ -44,6 +51,8 @@ export async function DELETE(
 
   const prisma = new PrismaClient({ datasourceUrl });
 
+  let retorno;
+
   try {
     await prisma.item.deleteMany({
       where: { venda: { idVenda: Number(params.id) } },
@@ -54,9 +63,12 @@ export async function DELETE(
     });
     prisma.$disconnect();
 
-    return NextResponse.json({});
+    retorno = { status: 200, data: {} };
   } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
     prisma.$disconnect();
-    return NextResponse.json(e);
+
+    return NextResponse.json(retorno);
   }
 }

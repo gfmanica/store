@@ -10,18 +10,26 @@ export async function GET(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const fornecedores = await prisma.fornecedor.findMany({
-    select: { dsFornecedor: true, idFornecedor: true },
-    where: {
-      dsFornecedor: {
-        contains: filterDsFornecedor || '',
+  let retorno;
+
+  try {
+    const fornecedores = await prisma.fornecedor.findMany({
+      select: { dsFornecedor: true, idFornecedor: true },
+      where: {
+        dsFornecedor: {
+          contains: filterDsFornecedor || '',
+        },
       },
-    },
-  });
+    });
 
-  prisma.$disconnect();
+    retorno = { status: 200, data: fornecedores };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
 
-  return NextResponse.json(fornecedores);
+    return NextResponse.json(retorno);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -31,13 +39,21 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const fornecedor = await prisma.fornecedor.create({
-    data,
-  });
+  let retorno;
 
-  prisma.$disconnect();
+  try {
+    const fornecedor = await prisma.fornecedor.create({
+      data,
+    });
 
-  return NextResponse.json(fornecedor);
+    retorno = { status: 200, data: fornecedor };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
+
+    return NextResponse.json(retorno);
+  }
 }
 
 export async function PUT(request: NextRequest) {
@@ -47,12 +63,19 @@ export async function PUT(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const fornecedor = await prisma.fornecedor.update({
-    where: { idFornecedor: data.idFornecedor },
-    data,
-  });
+  let retorno;
 
-  prisma.$disconnect();
+  try {
+    const fornecedor = await prisma.fornecedor.update({
+      where: { idFornecedor: data.idFornecedor },
+      data,
+    });
+    retorno = { status: 200, data: fornecedor };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
 
-  return NextResponse.json(fornecedor);
+    return NextResponse.json(retorno);
+  }
 }

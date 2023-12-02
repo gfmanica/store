@@ -8,27 +8,30 @@ export async function GET(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const vendas = await prisma.venda.findMany({
-    select: {
-      idVenda: true,
-      dtVenda: true,
-      vlTotal: true,
-      _count: {
-        select: {
-          item: true,
+  let retorno;
+
+  try {
+    const vendas = await prisma.venda.findMany({
+      select: {
+        idVenda: true,
+        dtVenda: true,
+        vlTotal: true,
+        _count: {
+          select: {
+            item: true,
+          },
         },
       },
-      funcionario: {
-        select: {
-          dsFuncionario: true,
-        },
-      },
-    },
-  });
+    });
 
-  prisma.$disconnect();
+    retorno = { status: 200, data: vendas };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
 
-  return NextResponse.json(vendas);
+    return NextResponse.json(retorno);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -38,30 +41,38 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const venda = await prisma.venda.create({
-    data: {
-      dtVenda: data.dtVenda,
-      funcionario: {
-        connect: { dsFuncionario: data.funcionario.dsFuncionario },
-      },
-      vlTotal: data.vlTotal,
-      item: {
-        create: data.item.map((item) => {
-          return {
-            qtItem: item.qtItem,
-            vlParcial: item.vlParcial,
-            produto: {
-              connect: { idProduto: item.produto?.idProduto },
-            },
-          };
-        }),
-      },
-    },
-  });
+  let retorno;
 
-  prisma.$disconnect();
+  try {
+    const venda = await prisma.venda.create({
+      data: {
+        dtVenda: data.dtVenda,
+        funcionario: {
+          connect: { dsFuncionario: data.funcionario.dsFuncionario },
+        },
+        vlTotal: data.vlTotal,
+        item: {
+          create: data.item.map((item) => {
+            return {
+              qtItem: item.qtItem,
+              vlParcial: item.vlParcial,
+              produto: {
+                connect: { idProduto: item.produto?.idProduto },
+              },
+            };
+          }),
+        },
+      },
+    });
 
-  return NextResponse.json(venda);
+    retorno = { status: 200, data: venda };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
+
+    return NextResponse.json(retorno);
+  }
 }
 
 export async function PUT(request: NextRequest) {
@@ -71,39 +82,47 @@ export async function PUT(request: NextRequest) {
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const venda = await prisma.venda.update({
-    where: { idVenda: data.idVenda },
-    data: {
-      dtVenda: data.dtVenda,
-      funcionario: {
-        connect: { dsFuncionario: data.funcionario.dsFuncionario },
-      },
-      vlTotal: data.vlTotal,
-      item: {
-        upsert: data.item.map((item) => {
-          return {
-            where: { idItem: item.idItem },
-            update: {
-              qtItem: item.qtItem,
-              vlParcial: item.vlParcial,
-              produto: {
-                connect: { idProduto: item.produto?.idProduto },
-              },
-            },
-            create: {
-              qtItem: item.qtItem,
-              vlParcial: item.vlParcial,
-              produto: {
-                connect: { idProduto: item.produto?.idProduto },
-              },
-            },
-          };
-        }),
-      },
-    },
-  });
+  let retorno;
 
-  prisma.$disconnect();
+  try {
+    const venda = await prisma.venda.update({
+      where: { idVenda: data.idVenda },
+      data: {
+        dtVenda: data.dtVenda,
+        funcionario: {
+          connect: { dsFuncionario: data.funcionario.dsFuncionario },
+        },
+        vlTotal: data.vlTotal,
+        item: {
+          upsert: data.item.map((item) => {
+            return {
+              where: { idItem: item.idItem },
+              update: {
+                qtItem: item.qtItem,
+                vlParcial: item.vlParcial,
+                produto: {
+                  connect: { idProduto: item.produto?.idProduto },
+                },
+              },
+              create: {
+                qtItem: item.qtItem,
+                vlParcial: item.vlParcial,
+                produto: {
+                  connect: { idProduto: item.produto?.idProduto },
+                },
+              },
+            };
+          }),
+        },
+      },
+    });
 
-  return NextResponse.json(venda);
+    retorno = { status: 200, data: venda };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
+
+    return NextResponse.json(retorno);
+  }
 }

@@ -6,7 +6,7 @@ import PatternFormField from '@/components/fields/pattern-form-field';
 import TextFormField from '@/components/fields/text-form-field';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
-import { TItemZod, TVendaZod } from '@/types/index';
+import { TItemZod, TResponse, TVenda, TVendaZod } from '@/types/index';
 import { produtoZod, vendaZod } from '@/validators/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input } from '@nextui-org/react';
@@ -40,7 +40,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     },
   });
 
-  const { data, isFetching } = useQuery<TVendaZod>({
+  const { data, isFetching, error } = useQuery<TResponse<TVendaZod>>({
     queryKey: ['getVenda'],
     queryFn: () => Api.get(`/api/venda/${idVenda}`).then((res) => res.data),
     retry: false,
@@ -49,19 +49,31 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
   });
 
   useEffect(() => {
-    if (data) {
-      data.item.forEach((item) => {
+    if (error) {
+      enqueueSnackbar('Você não possui permissão para editar a venda', {
+        variant: 'error',
+      });
+    }
+  }, [error]);
+
+  console.log(errors);
+
+  useEffect(() => {
+    debugger;
+    if (data?.data) {
+      data.data.item.forEach((item) => {
         item.vlParcial = Number(item.vlParcial);
       });
 
-      data.dtVenda = new Date(data.dtVenda).toLocaleDateString();
+      data.data.dtVenda = new Date(data.data.dtVenda).toLocaleDateString();
+      data.data.funcionario = { dsFuncionario: user };
 
-      reset(data);
+      reset(data?.data);
     }
   }, [data]);
 
   const { mutate, isPending } = useMutation<
-    AxiosResponse<any>,
+    AxiosResponse<TResponse<TVenda>>,
     AxiosError,
     TVendaZod
   >({
@@ -76,15 +88,21 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
             funcionario: { dsFuncionario: user },
           }),
     onSuccess: (data) => {
-      let message = 'Venda salva com sucesso!';
+      if (data.data.status === 400) {
+        enqueueSnackbar('Você não possui permissão para editar a venda', {
+          variant: 'error',
+        });
+      } else {
+        let message = 'Venda salva com sucesso!';
 
-      if (!idVenda) {
-        push(`/form/${data.data.idVenda}`);
+        if (!idVenda) {
+          push(`/form/${data.data.data.idVenda}`);
 
-        message = 'Venda criado com sucesso!';
+          message = 'Venda criado com sucesso!';
+        }
+
+        enqueueSnackbar(message, { variant: 'success' });
       }
-
-      enqueueSnackbar(message, { variant: 'success' });
     },
   });
 

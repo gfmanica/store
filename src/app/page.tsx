@@ -1,17 +1,18 @@
 'use client';
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback, useEffect } from 'react';
 import { MdOutlineEdit, MdOutlineDelete } from 'react-icons/md';
 import { Button, Tooltip } from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
-import { TVenda } from '@/types';
+import { TResponse, TVenda } from '@/types';
 import { localeDate, money } from '@/utils/format';
 import DataTable from '@/components/table/data-table';
 import { enqueueSnackbar } from 'notistack';
 import ActionColumnTable from '@/components/table/action-column-table';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { AxiosError, AxiosResponse } from 'axios';
 
 const getRows = (data: TVenda[] | undefined) => {
   if (data) {
@@ -19,7 +20,6 @@ const getRows = (data: TVenda[] | undefined) => {
       id: item.idVenda,
       dtVenda: localeDate(item.dtVenda),
       vlTotal: money(item.vlTotal),
-      dsFuncionario: item.funcionario.dsFuncionario,
       qtTotalItens: item._count.item,
     }));
   }
@@ -37,10 +37,6 @@ const columns = [
     label: 'Valor total',
   },
   {
-    key: 'dsFuncionario',
-    label: 'Funcionário',
-  },
-  {
     key: 'qtTotalItens',
     label: 'Quantidade de itens',
   },
@@ -56,26 +52,45 @@ export default function Home() {
   const { push } = useRouter();
 
   const {
-    data = [],
+    data,
     isFetching,
     refetch,
-  } = useQuery<TVenda[]>({
+    error,
+  } = useQuery<TResponse<TVenda[]>>({
     queryKey: ['geTVenda'],
     queryFn: () => Api.get('/api/venda').then((res) => res.data),
     retry: false,
     enabled: isAuthenticated,
   });
 
-  const { mutate } = useMutation({
+  const { mutate } = useMutation<
+    AxiosResponse<TResponse<TVenda[]>>,
+    AxiosError,
+    string
+  >({
     mutationFn: (data: string) => Api.delete(`/api/venda/${data}`),
-    onSuccess: () => {
-      enqueueSnackbar('Venda excluída com sucesso!', {
-        variant: 'success',
-      });
+    onSuccess: (data) => {
+      if (data.data.status === 400) {
+        enqueueSnackbar('Você não possui permissão para excluir a venda', {
+          variant: 'error',
+        });
+      } else {
+        enqueueSnackbar('Venda excluída com sucesso!', {
+          variant: 'success',
+        });
 
-      refetch();
+        refetch();
+      }
     },
   });
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Você não possui permissão para visualizar as vendas', {
+        variant: 'error',
+      });
+    }
+  }, [error]);
 
   const renderCell = (item: any, columnKey: any): ReactNode => {
     const cellValue = item[columnKey];
@@ -112,7 +127,7 @@ export default function Home() {
       <DataTable
         columns={columns}
         isFetching={isFetching}
-        rows={getRows(data)}
+        rows={getRows(data?.data)}
         renderCell={renderCell}
       />
     </>

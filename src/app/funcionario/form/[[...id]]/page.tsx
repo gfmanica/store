@@ -12,6 +12,8 @@ import {
   TProduto,
   TProdutoReturn,
   TFuncionarioZod,
+  TResponse,
+  TFuncionario,
 } from '@/types/index';
 import { funcionarioZod, produtoZod } from '@/validators/index';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,7 +25,11 @@ import { enqueueSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-export default function ProdutoForm({ params }: { params: { id: string[] } }) {
+export default function FuncionarioForm({
+  params,
+}: {
+  params: { id: string[] };
+}) {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
   const idFuncionario = params?.id?.[0];
@@ -38,7 +44,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
     resolver: zodResolver(funcionarioZod),
   });
 
-  const { data, isFetching } = useQuery<TFuncionarioZod>({
+  const { data, isFetching, error } = useQuery<TResponse<TFuncionarioZod>>({
     queryKey: ['getFuncionario'],
     queryFn: () =>
       Api.get(`/api/funcionario/${idFuncionario}`).then((res) => res.data),
@@ -47,10 +53,18 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
     enabled: isAuthenticated && !!idFuncionario,
   });
 
-  useEffect(() => (data ? reset(data) : undefined), [data]);
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Você não possui permissão para editar o produto', {
+        variant: 'error',
+      });
+    }
+  }, [error]);
+
+  useEffect(() => (data ? reset(data?.data) : undefined), [data]);
 
   const { mutate, isPending } = useMutation<
-    AxiosResponse<any>,
+    AxiosResponse<TResponse<TFuncionario>>,
     AxiosError,
     TFuncionarioZod
   >({
@@ -59,19 +73,23 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
         ? Api.put('/api/funcionario', data)
         : Api.post('/api/funcionario', data),
     onSuccess: (data) => {
-      let message = 'Funcionário salvo com sucesso!';
+      if (data.data.status === 400) {
+        enqueueSnackbar('Você não possui permissão para editar o produto', {
+          variant: 'error',
+        });
+      } else {
+        let message = 'Funcionário salvo com sucesso!';
 
-      if (!idFuncionario) {
-        push(`/funcionario/form/${data.data.idFuncionario}`);
+        if (!idFuncionario) {
+          push(`/funcionario/form/${data.data.data.idFuncionario}`);
 
-        message = 'Funcionário criado com sucesso!';
+          message = 'Funcionário criado com sucesso!';
+        }
+
+        enqueueSnackbar(message, { variant: 'success' });
       }
-
-      enqueueSnackbar(message, { variant: 'success' });
     },
   });
-
-  console.log(errors);
 
   return (
     <>

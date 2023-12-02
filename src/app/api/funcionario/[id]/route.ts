@@ -10,22 +10,30 @@ export async function GET(
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const funcionario = await prisma.funcionario.findUnique({
-    select: {
-      idFuncionario: true,
-      dsFuncionario: true,
-      dsFuncao: true,
-      nrCpf: true,
-      dsSenha: true,
-    },
-    where: {
-      idFuncionario: Number(params.id),
-    },
-  });
+  let retorno;
 
-  prisma.$disconnect();
+  try {
+    const funcionario = await prisma.funcionario.findUnique({
+      select: {
+        idFuncionario: true,
+        dsFuncionario: true,
+        dsFuncao: true,
+        nrCpf: true,
+        dsSenha: true,
+      },
+      where: {
+        idFuncionario: Number(params.id),
+      },
+    });
 
-  return NextResponse.json(funcionario);
+    retorno = { status: 200, data: funcionario };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
+
+    return NextResponse.json(retorno);
+  }
 }
 
 export async function DELETE(
@@ -36,6 +44,8 @@ export async function DELETE(
   const datasourceUrl = searchParams.get('datasourceUrl') || '';
 
   const prisma = new PrismaClient({ datasourceUrl });
+
+  let retorno;
 
   try {
     const funcionario = await prisma.funcionario.findUnique({
@@ -48,10 +58,12 @@ export async function DELETE(
       where: { idFuncionario: Number(params.id) },
     });
 
-    prisma.$disconnect();
-    return NextResponse.json(funcionario);
+    retorno = { status: 200, data: funcionario };
   } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
     prisma.$disconnect();
-    return NextResponse.json(e);
+
+    return NextResponse.json(retorno);
   }
 }

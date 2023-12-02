@@ -4,14 +4,15 @@ import ActionColumnTable from '@/components/table/action-column-table';
 import DataTable from '@/components/table/data-table';
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
-import { TProduto } from '@/types/index';
+import { TProduto, TResponse } from '@/types/index';
 import { money } from '@/utils/format';
 import { Button, Tooltip } from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 
 const getRows = (data: TProduto[] | undefined) => {
@@ -56,21 +57,39 @@ export default function Produto() {
   const Api = useApiContext();
   const { push } = useRouter();
 
-  const { data, isFetching, refetch } = useQuery<TProduto[]>({
+  const { data, isFetching, refetch, error } = useQuery<TResponse<TProduto[]>>({
     queryKey: ['getTProduto'],
     queryFn: () => Api.get('/api/produto').then((res) => res.data),
     retry: false,
     enabled: isAuthenticated,
   });
 
-  const { mutate } = useMutation({
-    mutationFn: (data: string) => Api.delete(`/api/produto/${data}`),
-    onSuccess: (data) => {
-      enqueueSnackbar('Produto excluído com sucesso!', {
-        variant: 'success',
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Você não possui permissão para visualizar os produtos', {
+        variant: 'error',
       });
+    }
+  }, [error]);
 
-      refetch();
+  const { mutate } = useMutation<
+    AxiosResponse<TResponse<TProduto[]>>,
+    AxiosError,
+    string
+  >({
+    mutationFn: (data) => Api.delete(`/api/produto/${data}`),
+    onSuccess: (data) => {
+      if (data.data.status === 400) {
+        enqueueSnackbar('Você não possui permissão para excluir o produto', {
+          variant: 'error',
+        });
+      } else {
+        enqueueSnackbar('Produto excluído com sucesso!', {
+          variant: 'success',
+        });
+
+        refetch();
+      }
     },
   });
 
@@ -109,7 +128,7 @@ export default function Produto() {
       <DataTable
         columns={columns}
         isFetching={isFetching}
-        rows={getRows(data)}
+        rows={getRows(data?.data)}
         renderCell={renderCell}
       />
     </>

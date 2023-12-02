@@ -10,6 +10,7 @@ import {
   TProduto,
   TProdutoReturn,
   TProdutoZod,
+  TResponse,
 } from '@/types/index';
 import { produtoZod } from '@/validators/index';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -36,7 +37,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
     resolver: zodResolver(produtoZod),
   });
 
-  const { data, isFetching } = useQuery<TProduto>({
+  const { data, isFetching, error } = useQuery<TResponse<TProduto>>({
     queryKey: ['getProduto'],
     queryFn: () => Api.get(`/api/produto/${idProduto}`).then((res) => res.data),
     retry: false,
@@ -44,10 +45,18 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
     enabled: isAuthenticated && !!idProduto,
   });
 
-  useEffect(() => (data ? reset(data) : undefined), [data]);
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Você não possui permissão para editar o produto', {
+        variant: 'error',
+      });
+    }
+  }, [error]);
+
+  useEffect(() => (data ? reset(data?.data) : undefined), [data]);
 
   const { mutate, isPending } = useMutation<
-    AxiosResponse<TProdutoReturn>,
+    AxiosResponse<TResponse<TProdutoReturn>>,
     AxiosError,
     TProdutoZod
   >({
@@ -56,15 +65,21 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
         ? Api.put('/api/produto', data)
         : Api.post('/api/produto', data),
     onSuccess: (data) => {
-      let message = 'Produto salvo com sucesso!';
+      if (data.data.status === 400) {
+        enqueueSnackbar('Você não possui permissão para editar o produto', {
+          variant: 'error',
+        });
+      } else {
+        let message = 'Produto salvo com sucesso!';
 
-      if (!idProduto) {
-        push(`/produto/form/${data.data.idProduto}`);
+        if (!idProduto) {
+          push(`/produto/form/${data.data.data.idProduto}`);
 
-        message = 'Produto criado com sucesso!';
+          message = 'Produto criado com sucesso!';
+        }
+
+        enqueueSnackbar(message, { variant: 'success' });
       }
-
-      enqueueSnackbar(message, { variant: 'success' });
     },
   });
 

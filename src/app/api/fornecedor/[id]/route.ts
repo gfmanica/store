@@ -10,16 +10,24 @@ export async function GET(
 
   const prisma = new PrismaClient({ datasourceUrl });
 
-  const fornecedor = await prisma.fornecedor.findUnique({
-    select: { dsFornecedor: true, idFornecedor: true },
-    where: {
-      idFornecedor: Number(params.id),
-    },
-  });
+  let retorno;
 
-  prisma.$disconnect();
+  try {
+    const fornecedor = await prisma.fornecedor.findUnique({
+      select: { dsFornecedor: true, idFornecedor: true },
+      where: {
+        idFornecedor: Number(params.id),
+      },
+    });
 
-  return NextResponse.json(fornecedor);
+    retorno = { status: 200, data: fornecedor };
+  } catch (e) {
+    retorno = { status: 400, data: null };
+  } finally {
+    prisma.$disconnect();
+
+    return NextResponse.json(retorno);
+  }
 }
 
 export async function DELETE(
@@ -31,15 +39,19 @@ export async function DELETE(
 
   const prisma = new PrismaClient({ datasourceUrl });
 
+  let retorno;
+
   try {
     const fornecedor = await prisma.fornecedor.delete({
       where: { idFornecedor: Number(params.id) },
     });
-    prisma.$disconnect();
-    return NextResponse.json(fornecedor);
+
+    retorno = { status: 200, data: fornecedor };
   } catch (e) {
-    
+    retorno = { status: 400, data: null };
+  } finally {
     prisma.$disconnect();
-    return NextResponse.json(e);
+
+    return NextResponse.json(retorno);
   }
 }

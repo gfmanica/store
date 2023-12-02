@@ -1,6 +1,6 @@
 import { useApiContext } from '@/contexts/api-context';
 import { useAuthContext } from '@/contexts/auth-context';
-import { TFornecedor } from '@/types';
+import { TFornecedor, TResponse } from '@/types';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/utils/cn';
@@ -12,6 +12,7 @@ import {
   FieldValues,
   Path,
 } from 'react-hook-form';
+import { enqueueSnackbar } from 'notistack';
 
 type TInputField<TFieldValues extends FieldValues> = {
   label: string;
@@ -36,25 +37,40 @@ export default function FornecedorFormAutocomplete<
   const Api = useApiContext();
   const [selectedKey, setSelectedKey] = useState<string>('');
 
-  const { data, isFetching } = useQuery<TFornecedor[]>({
+  const {
+    data,
+    isFetching,
+    error: errorRequest,
+  } = useQuery<TResponse<TFornecedor[]>>({
     queryKey: ['getFornecedores'],
     queryFn: () => Api.get('/api/fornecedor').then((res) => res.data),
     retry: false,
     enabled: isAuthenticated,
   });
 
+  useEffect(() => {
+    if (errorRequest) {
+      enqueueSnackbar(
+        'Você não possui permissão para visualizar os fornecedores',
+        {
+          variant: 'error',
+        }
+      );
+    }
+  }, [errorRequest]);
+
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { onChange, value } }) => {
-        if (data && !selectedKey && value) {
+        if (data?.data && !selectedKey && value) {
           setSelectedKey(value.idFornecedor.toString());
         }
-        
+
         return (
           <Autocomplete
-            defaultItems={data || []}
+            defaultItems={data?.data || []}
             label={label}
             disabled={disabled}
             isLoading={isFetching}
@@ -63,7 +79,7 @@ export default function FornecedorFormAutocomplete<
             errorMessage={error ? error?.message : ''}
             selectedKey={selectedKey}
             onSelectionChange={(key: string) => {
-              const fornecedor = data?.find(
+              const fornecedor = data?.data?.find(
                 (item) => item.idFornecedor === Number(key)
               );
 

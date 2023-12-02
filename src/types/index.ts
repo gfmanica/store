@@ -61,3 +61,8 @@ export type TFuncionario = {
   dsFuncao: string;
   nrCpf: string;
 };
+
+export type TResponse<TData> = {
+  data: TData
+  status: number;
+};
