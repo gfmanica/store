@@ -17,7 +17,6 @@ export default function Navbar() {
     queryKey: ['getBackup'],
     queryFn: () => Api.get('/api/backup').then((res) => res.data),
     enabled: false,
-
   });
 
   useEffect(() => {
@@ -36,10 +35,6 @@ export default function Navbar() {
         </Link>
 
         <div className="flex items-center gap-6">
-          <Button variant="shadow" color="secondary" onClick={() => refetch()}>
-            Backup
-          </Button>
-
           <Link href="/fornecedor">
             <p className="hover:font-semibold transition-all">Fornecedores</p>
           </Link>
@@ -57,15 +52,21 @@ export default function Navbar() {
           <Divider orientation="vertical" className="h-4" />
 
           <p>
-            Funcionário: <strong>{user}</strong>
+            Funcionário <strong>{user}</strong>
           </p>
 
-          <p
-            className="hover:font-semibold transition-all hover:cursor-pointer"
-            onClick={logout}
-          >
+          <Button variant="shadow" color="primary" size="sm" onClick={logout}>
             Sair
-          </p>
+          </Button>
+
+          <Button
+            variant="shadow"
+            color="secondary"
+            size="sm"
+            onClick={() => refetch()}
+          >
+            Backup
+          </Button>
         </div>
       </div>
     </header>
