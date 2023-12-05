@@ -74,7 +74,7 @@ export default function FuncionarioForm({
         : Api.post('/api/funcionario', data),
     onSuccess: (data) => {
       if (data.data.status === 400) {
-        enqueueSnackbar('Você não possui permissão para editar o produto', {
+        enqueueSnackbar('Você não possui permissão para editar o funcionário', {
           variant: 'error',
         });
       } else {

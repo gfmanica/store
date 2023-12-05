@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   
 
   const prisma = new PrismaClient({
-    datasourceUrl: `postgres://${user}:${password}@ep-divine-dew-61652658.us-east-2.aws.neon.tech/taste-horizon?sslmode=require`,
+    datasourceUrl: `postgres://${user}:${password}@localhost:5432/taste-horizon`,
   });
 
   let connectionReturn: TConnection;

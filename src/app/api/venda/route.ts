@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
 
     retorno = { status: 200, data: venda };
   } catch (e) {
+    console.log(e);
     retorno = { status: 400, data: null };
   } finally {
     prisma.$disconnect();
