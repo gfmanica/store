@@ -15,14 +15,14 @@ export async function GET(
   try {
     const funcionario = await prisma.funcionario.findUnique({
       select: {
-        idFuncionario: true,
-        dsFuncionario: true,
-        dsFuncao: true,
-        nrCpf: true,
-        dsSenha: true,
+        idfuncionario: true,
+        dsfuncionario: true,
+        dsfuncao: true,
+        nrcpf: true,
+        dssenha: true,
       },
       where: {
-        idFuncionario: Number(params.id),
+        idfuncionario: Number(params.id),
       },
     });
 
@@ -49,13 +49,13 @@ export async function DELETE(
 
   try {
     const funcionario = await prisma.funcionario.findUnique({
-      where: { idFuncionario: Number(params.id) },
+      where: { idfuncionario: Number(params.id) },
     });
 
-    await prisma.$executeRawUnsafe(`DROP USER ${funcionario?.dsFuncionario}`);
+    await prisma.$executeRawUnsafe(`DROP USER ${funcionario?.dsfuncionario}`);
 
     await prisma.funcionario.delete({
-      where: { idFuncionario: Number(params.id) },
+      where: { idfuncionario: Number(params.id) },
     });
 
     retorno = { status: 200, data: funcionario };

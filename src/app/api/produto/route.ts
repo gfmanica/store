@@ -13,11 +13,14 @@ export async function GET(request: NextRequest) {
   try {
     const produtos = await prisma.produto.findMany({
       select: {
-        idProduto: true,
-        dsProduto: true,
-        qtProduto: true,
-        vlProduto: true,
-        fornecedor: { select: { dsFornecedor: true } },
+        idproduto: true,
+        dsproduto: true,
+        qtproduto: true,
+        vlproduto: true,
+        fornecedor: { select: { dsfornecedor: true } },
+      },
+      orderBy: {
+        idproduto: 'asc',
       },
     });
 
@@ -43,10 +46,10 @@ export async function POST(request: NextRequest) {
   try {
     const produtos = await prisma.produto.create({
       data: {
-        dsProduto: data.dsProduto,
-        qtProduto: data.qtProduto,
-        vlProduto: data.vlProduto,
-        fornecedor: { connect: { idFornecedor: data.fornecedor.idFornecedor } },
+        dsproduto: data.dsproduto,
+        qtproduto: data.qtproduto,
+        vlproduto: data.vlproduto,
+        fornecedor: { connect: { idfornecedor: data.fornecedor.idfornecedor } },
       },
     });
 
@@ -71,12 +74,12 @@ export async function PUT(request: NextRequest) {
 
   try {
     const produtos = await prisma.produto.update({
-      where: { idProduto: data.idProduto },
+      where: { idproduto: data.idproduto },
       data: {
-        dsProduto: data.dsProduto,
-        qtProduto: data.qtProduto,
-        vlProduto: data.vlProduto,
-        fornecedor: { connect: { idFornecedor: data.fornecedor.idFornecedor } },
+        dsproduto: data.dsproduto,
+        qtproduto: data.qtproduto,
+        vlproduto: data.vlproduto,
+        fornecedor: { connect: { idfornecedor: data.fornecedor.idfornecedor } },
       },
     });
 

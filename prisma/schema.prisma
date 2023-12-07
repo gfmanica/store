@@ -9,45 +9,46 @@ datasource db {
 }
 
 model fornecedor {
-  idFornecedor Int       @id @default(autoincrement())
-  dsFornecedor String?   @db.VarChar(45)
+  idfornecedor Int       @id @default(autoincrement())
+  dsfornecedor String?   @db.VarChar(45)
   produto      produto[]
 }
 
 model funcionario {
-  idFuncionario Int     @id @default(autoincrement())
-  dsFuncionario String? @unique @db.VarChar(45)
-  nrCpf         String? @db.VarChar(45)
-  dsSenha       String? @db.VarChar(50)
-  dsFuncao      String? @db.VarChar(50)
+  idfuncionario Int     @id @default(autoincrement())
+  dsfuncionario String? @unique(map: "funcionario_dsFuncionario_key") @db.VarChar(45)
+  nrcpf         String? @db.VarChar(45)
+  dssenha       String? @db.VarChar(50)
+  dsfuncao      String? @db.VarChar(50)
   venda         venda[]
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model item {
-  idItem    Int      @id @default(autoincrement())
-  qtItem    Int?
-  vlParcial Decimal? @db.Decimal(7, 2)
-  idProduto Int?
-  idVenda   Int?
-  produto   produto? @relation(fields: [idProduto], references: [idProduto], onDelete: NoAction, onUpdate: NoAction)
-  venda     venda?   @relation(fields: [idVenda], references: [idVenda], onDelete: NoAction, onUpdate: NoAction)
+  iditem    Int      @id @default(autoincrement())
+  qtitem    Int?
+  vlparcial Decimal? @db.Decimal(7, 2)
+  idproduto Int?
+  idvenda   Int?
+  produto   produto? @relation(fields: [idproduto], references: [idproduto], onDelete: NoAction, onUpdate: NoAction, map: "item_idProduto_fkey")
+  venda     venda?   @relation(fields: [idvenda], references: [idvenda], onDelete: NoAction, onUpdate: NoAction, map: "item_idVenda_fkey")
 }
 
 model produto {
-  idProduto    Int         @id @default(autoincrement())
-  dsProduto    String?     @db.VarChar(45)
-  vlProduto    Decimal?    @db.Decimal(7, 2)
-  qtProduto    Int?
-  idFornecedor Int?
+  idproduto    Int         @id @default(autoincrement())
+  dsproduto    String?     @db.VarChar(45)
+  vlproduto    Decimal?    @db.Decimal(7, 2)
+  qtproduto    Int?
+  idfornecedor Int?
   item         item[]
-  fornecedor   fornecedor? @relation(fields: [idFornecedor], references: [idFornecedor], onDelete: NoAction, onUpdate: NoAction)
+  fornecedor   fornecedor? @relation(fields: [idfornecedor], references: [idfornecedor], onDelete: NoAction, onUpdate: NoAction, map: "produto_idFornecedor_fkey")
 }
 
 model venda {
-  idVenda       Int          @id @default(autoincrement())
-  dtVenda       DateTime?    @default(now())
-  vlTotal       Decimal?     @db.Decimal(7, 2)
-  idFuncionario Int?
+  idvenda       Int          @id @default(autoincrement())
+  dtvenda       DateTime?    @default(now())
+  vltotal       Decimal?     @db.Decimal(7, 2)
+  idfuncionario Int?
   item          item[]
-  funcionario   funcionario? @relation(fields: [idFuncionario], references: [idFuncionario], onDelete: NoAction, onUpdate: NoAction)
+  funcionario   funcionario? @relation(fields: [idfuncionario], references: [idfuncionario], onDelete: NoAction, onUpdate: NoAction, map: "venda_idFuncionario_fkey")
 }

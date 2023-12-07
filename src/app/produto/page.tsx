@@ -18,11 +18,11 @@ import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 const getRows = (data: TProduto[] | undefined) => {
   if (data) {
     return data.map((item) => ({
-      id: item.idProduto,
-      dsProduto: item.dsProduto,
-      vlProduto: money(item.vlProduto),
-      qtProduto: item.qtProduto,
-      dsFornecedor: item.fornecedor.dsFornecedor,
+      id: item.idproduto,
+      dsproduto: item.dsproduto,
+      vlproduto: money(item.vlproduto),
+      qtproduto: item.qtproduto,
+      dsfornecedor: item.fornecedor.dsfornecedor,
     }));
   }
 
@@ -31,19 +31,19 @@ const getRows = (data: TProduto[] | undefined) => {
 
 const columns = [
   {
-    key: 'dsProduto',
+    key: 'dsproduto',
     label: 'Produto',
   },
   {
-    key: 'vlProduto',
+    key: 'vlproduto',
     label: 'Valor',
   },
   {
-    key: 'qtProduto',
+    key: 'qtproduto',
     label: 'Quantidade de estoque',
   },
   {
-    key: 'dsFornecedor',
+    key: 'dsfornecedor',
     label: 'Fornecedor',
   },
   {

@@ -25,7 +25,7 @@ import { useForm } from 'react-hook-form';
 export default function ProdutoForm({ params }: { params: { id: string[] } }) {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
-  const idProduto = params?.id?.[0];
+  const idproduto = params?.id?.[0];
   const { push } = useRouter();
 
   const {
@@ -39,10 +39,10 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
 
   const { data, isFetching } = useQuery<TResponse<TProduto>>({
     queryKey: ['getProduto'],
-    queryFn: () => Api.get(`/api/produto/${idProduto}`).then((res) => res.data),
+    queryFn: () => Api.get(`/api/produto/${idproduto}`).then((res) => res.data),
     retry: false,
     gcTime: 0,
-    enabled: isAuthenticated && !!idProduto,
+    enabled: isAuthenticated && !!idproduto,
   });
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
     TProdutoZod
   >({
     mutationFn: (data) =>
-      idProduto
+      idproduto
         ? Api.put('/api/produto', data)
         : Api.post('/api/produto', data),
     onSuccess: (data) => {
@@ -72,8 +72,8 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
       } else {
         let message = 'Produto salvo com sucesso!';
 
-        if (!idProduto) {
-          push(`/produto/form/${data.data.data.idProduto}`);
+        if (!idproduto) {
+          push(`/produto/form/${data.data.data.idproduto}`);
 
           message = 'Produto criado com sucesso!';
         }
@@ -86,7 +86,7 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
   return (
     <>
       <p className="text-2xl font-semibold">
-        {idProduto ? 'Editar' : 'Cadastrar'} produto
+        {idproduto ? 'Editar' : 'Cadastrar'} produto
       </p>
 
       <form
@@ -97,15 +97,15 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
           <TextFormField<TProdutoZod>
             control={control}
             label="Produto"
-            name="dsProduto"
-            error={errors.dsProduto}
+            name="dsproduto"
+            error={errors.dsproduto}
           />
 
           <NumberFormField<TProdutoZod>
             control={control}
             label="Quantidade de estoque"
-            name="qtProduto"
-            error={errors.qtProduto}
+            name="qtproduto"
+            error={errors.qtproduto}
           />
         </div>
 
@@ -113,18 +113,18 @@ export default function ProdutoForm({ params }: { params: { id: string[] } }) {
           <NumberFormField<TProdutoZod>
             control={control}
             label="Valor"
-            name="vlProduto"
+            name="vlproduto"
             prefix="R$ "
             decimalScale={2}
             valueFormat="value"
-            error={errors.vlProduto}
+            error={errors.vlproduto}
           />
 
           <FornecedorFormAutocomplete<TProdutoZod>
             control={control}
             label="Fornecedor"
             name="fornecedor"
-            error={errors.fornecedor?.idFornecedor}
+            error={errors.fornecedor?.idfornecedor}
           />
         </div>
 

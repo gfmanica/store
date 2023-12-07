@@ -14,9 +14,9 @@ export async function GET(
 
   try {
     const fornecedor = await prisma.fornecedor.findUnique({
-      select: { dsFornecedor: true, idFornecedor: true },
+      select: { dsfornecedor: true, idfornecedor: true },
       where: {
-        idFornecedor: Number(params.id),
+        idfornecedor: Number(params.id),
       },
     });
 
@@ -43,7 +43,7 @@ export async function DELETE(
 
   try {
     const fornecedor = await prisma.fornecedor.delete({
-      where: { idFornecedor: Number(params.id) },
+      where: { idfornecedor: Number(params.id) },
     });
 
     retorno = { status: 200, data: fornecedor };

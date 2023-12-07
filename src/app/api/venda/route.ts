@@ -13,19 +13,23 @@ export async function GET(request: NextRequest) {
   try {
     const vendas = await prisma.venda.findMany({
       select: {
-        idVenda: true,
-        dtVenda: true,
-        vlTotal: true,
+        idvenda: true,
+        dtvenda: true,
+        vltotal: true,
         _count: {
           select: {
             item: true,
           },
         },
       },
+      orderBy: {
+        idvenda: 'asc',
+      },
     });
 
     retorno = { status: 200, data: vendas };
   } catch (e) {
+    console.log(e);
     retorno = { status: 400, data: null };
   } finally {
     prisma.$disconnect();
@@ -46,18 +50,18 @@ export async function POST(request: NextRequest) {
   try {
     const venda = await prisma.venda.create({
       data: {
-        dtVenda: data.dtVenda,
+        dtvenda: data.dtvenda,
         funcionario: {
-          connect: { dsFuncionario: data.funcionario.dsFuncionario },
+          connect: { dsfuncionario: data.funcionario.dsfuncionario },
         },
-        vlTotal: data.vlTotal,
+        vltotal: data.vltotal,
         item: {
           create: data.item.map((item) => {
             return {
-              qtItem: item.qtItem,
-              vlParcial: item.vlParcial,
+              qtitem: item.qtitem,
+              vlparcial: item.vlparcial,
               produto: {
-                connect: { idProduto: item.produto?.idProduto },
+                connect: { idproduto: item.produto?.idproduto },
               },
             };
           }),
@@ -87,29 +91,29 @@ export async function PUT(request: NextRequest) {
 
   try {
     const venda = await prisma.venda.update({
-      where: { idVenda: data.idVenda },
+      where: { idvenda: data.idvenda },
       data: {
-        dtVenda: data.dtVenda,
+        dtvenda: data.dtvenda,
         funcionario: {
-          connect: { dsFuncionario: data.funcionario.dsFuncionario },
+          connect: { dsfuncionario: data.funcionario.dsfuncionario },
         },
-        vlTotal: data.vlTotal,
+        vltotal: data.vltotal,
         item: {
           upsert: data.item.map((item) => {
             return {
-              where: { idItem: item.idItem },
+              where: { iditem: item.iditem },
               update: {
-                qtItem: item.qtItem,
-                vlParcial: item.vlParcial,
+                qtitem: item.qtitem,
+                vlparcial: item.vlparcial,
                 produto: {
-                  connect: { idProduto: item.produto?.idProduto },
+                  connect: { idproduto: item.produto?.idproduto },
                 },
               },
               create: {
-                qtItem: item.qtItem,
-                vlParcial: item.vlParcial,
+                qtitem: item.qtitem,
+                vlparcial: item.vlparcial,
                 produto: {
-                  connect: { idProduto: item.produto?.idProduto },
+                  connect: { idproduto: item.produto?.idproduto },
                 },
               },
             };

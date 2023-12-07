@@ -14,11 +14,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const fornecedores = await prisma.fornecedor.findMany({
-      select: { dsFornecedor: true, idFornecedor: true },
+      select: { dsfornecedor: true, idfornecedor: true },
       where: {
-        dsFornecedor: {
+        dsfornecedor: {
           contains: filterDsFornecedor || '',
         },
+      },
+      orderBy: {
+        idfornecedor: 'asc',
       },
     });
 
@@ -67,7 +70,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const fornecedor = await prisma.fornecedor.update({
-      where: { idFornecedor: data.idFornecedor },
+      where: { idfornecedor: data.idfornecedor },
       data,
     });
     retorno = { status: 200, data: fornecedor };

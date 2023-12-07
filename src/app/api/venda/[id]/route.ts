@@ -15,20 +15,20 @@ export async function GET(
   try {
     const venda = await prisma.venda.findUnique({
       select: {
-        idVenda: true,
-        dtVenda: true,
-        vlTotal: true,
+        idvenda: true,
+        dtvenda: true,
+        vltotal: true,
         item: {
           select: {
-            idItem: true,
+            iditem: true,
             produto: true,
-            qtItem: true,
-            vlParcial: true,
+            qtitem: true,
+            vlparcial: true,
           },
         },
       },
       where: {
-        idVenda: Number(params.id),
+        idvenda: Number(params.id),
       },
     });
 
@@ -55,11 +55,11 @@ export async function DELETE(
 
   try {
     await prisma.item.deleteMany({
-      where: { venda: { idVenda: Number(params.id) } },
+      where: { venda: { idvenda: Number(params.id) } },
     });
 
     await prisma.venda.delete({
-      where: { idVenda: Number(params.id) },
+      where: { idvenda: Number(params.id) },
     });
     prisma.$disconnect();
 

@@ -15,10 +15,10 @@ import { ReactNode, useEffect } from 'react';
 const getRows = (data: TFuncionario[] | undefined) => {
   if (data) {
     return data.map((item) => ({
-      id: item.idFuncionario,
-      dsFuncionario: item.dsFuncionario,
-      nrCpf: item.nrCpf,
-      dsFuncao: item.dsFuncao,
+      id: item.idfuncionario,
+      dsfuncionario: item.dsfuncionario,
+      nrcpf: item.nrcpf,
+      dsfuncao: item.dsfuncao,
     }));
   }
 
@@ -27,15 +27,15 @@ const getRows = (data: TFuncionario[] | undefined) => {
 
 const columns = [
   {
-    key: 'dsFuncionario',
+    key: 'dsfuncionario',
     label: 'Funcionario',
   },
   {
-    key: 'nrCpf',
+    key: 'nrcpf',
     label: 'CPF',
   },
   {
-    key: 'dsFuncao',
+    key: 'dsfuncao',
     label: 'Funcao',
   },
   {

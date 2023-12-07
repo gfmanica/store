@@ -16,8 +16,8 @@ import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 const getRows = (data: TFornecedor[] | undefined) => {
   if (data) {
     return data.map((item) => ({
-      id: item.idFornecedor,
-      dsFornecedor: item.dsFornecedor,
+      id: item.idfornecedor,
+      dsfornecedor: item.dsfornecedor,
     }));
   }
 
@@ -26,7 +26,7 @@ const getRows = (data: TFornecedor[] | undefined) => {
 
 const columns = [
   {
-    key: 'dsFornecedor',
+    key: 'dsfornecedor',
     label: 'Fornecedor',
   },
   {

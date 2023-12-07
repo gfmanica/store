@@ -13,10 +13,13 @@ export async function GET(request: NextRequest) {
   try {
     const funcionarios = await prisma.funcionario.findMany({
       select: {
-        idFuncionario: true,
-        dsFuncionario: true,
-        dsFuncao: true,
-        nrCpf: true,
+        idfuncionario: true,
+        dsfuncionario: true,
+        dsfuncao: true,
+        nrcpf: true,
+      },
+      orderBy: {
+        idfuncionario: 'asc',
       },
     });
 
@@ -41,19 +44,19 @@ export async function POST(request: NextRequest) {
 
   try {
     await prisma.$executeRawUnsafe(
-      `CREATE USER ${data.dsFuncionario} PASSWORD '${data.dsSenha}';`
+      `CREATE USER ${data.dsfuncionario} PASSWORD '${data.dssenha}';`
     );
 
     await prisma.$executeRawUnsafe(
-      `GRANT ${data.dsFuncao} TO ${data.dsFuncionario};`
+      `GRANT ${data.dsfuncao} TO ${data.dsfuncionario};`
     );
 
     const funcionarios = await prisma.funcionario.create({
       data: {
-        dsFuncao: data.dsFuncao,
-        dsFuncionario: data.dsFuncionario,
-        dsSenha: data.dsSenha,
-        nrCpf: data.nrCpf,
+        dsfuncao: data.dsfuncao,
+        dsfuncionario: data.dsfuncionario,
+        dssenha: data.dssenha,
+        nrcpf: data.nrcpf,
       },
     });
 

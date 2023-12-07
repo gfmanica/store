@@ -21,7 +21,7 @@ export default function FornecedorForm({
 }) {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
-  const idFornecedor = params?.id?.[0];
+  const idfornecedor = params?.id?.[0];
   const { push } = useRouter();
 
   const {
@@ -36,10 +36,10 @@ export default function FornecedorForm({
   const { data, isFetching, error } = useQuery<TResponse<TFornecedor>>({
     queryKey: ['getFornecedor'],
     queryFn: () =>
-      Api.get(`/api/fornecedor/${idFornecedor}`).then((res) => res.data),
+      Api.get(`/api/fornecedor/${idfornecedor}`).then((res) => res.data),
     retry: false,
     gcTime: 0,
-    enabled: isAuthenticated && !!idFornecedor,
+    enabled: isAuthenticated && !!idfornecedor,
   });
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function FornecedorForm({
     TFornecedorZod
   >({
     mutationFn: (data) =>
-      idFornecedor
+      idfornecedor
         ? Api.put('/api/fornecedor', data)
         : Api.post('/api/fornecedor', data),
     onSuccess: (data) => {
@@ -69,8 +69,8 @@ export default function FornecedorForm({
       } else {
         let message = 'Fornecedor salvo com sucesso!';
 
-        if (!idFornecedor) {
-          push(`/fornecedor/form/${data.data.data.idFornecedor}`);
+        if (!idfornecedor) {
+          push(`/fornecedor/form/${data.data.data.idfornecedor}`);
 
           message = 'Fornecedor criado com sucesso!';
         }
@@ -83,7 +83,7 @@ export default function FornecedorForm({
   return (
     <>
       <p className="text-2xl font-semibold">
-        {idFornecedor ? 'Editar' : 'Cadastrar'} fornecedor
+        {idfornecedor ? 'Editar' : 'Cadastrar'} fornecedor
       </p>
 
       <form
@@ -93,8 +93,8 @@ export default function FornecedorForm({
         <TextFormField<TFornecedorZod>
           control={control}
           label="Fornecedor"
-          name="dsFornecedor"
-          error={errors.dsFornecedor}
+          name="dsfornecedor"
+          error={errors.dsfornecedor}
         />
 
         <div className="flex justify-end">

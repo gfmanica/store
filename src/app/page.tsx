@@ -17,9 +17,9 @@ import { AxiosError, AxiosResponse } from 'axios';
 const getRows = (data: TVenda[] | undefined) => {
   if (data) {
     return data.map((item) => ({
-      id: item.idVenda,
-      dtVenda: localeDate(item.dtVenda),
-      vlTotal: money(item.vlTotal),
+      id: item.idvenda,
+      dtVenda: localeDate(item.dtvenda),
+      vlTotal: money(item.vltotal),
       qtTotalItens: item._count.item,
     }));
   }

@@ -13,11 +13,11 @@ export type TConnection = {
 };
 
 export type TVenda = {
-  idVenda: number;
-  dtVenda: string;
-  vlTotal: string;
+  idvenda: number;
+  dtvenda: string;
+  vltotal: string;
   funcionario: {
-    dsFuncionario: string;
+    dsfuncionario: string;
   };
   _count: {
     item: number;
@@ -27,26 +27,26 @@ export type TVenda = {
 export type TVendaZod = z.infer<typeof vendaZod>;
 
 export type TFornecedor = {
-  idFornecedor: number;
-  dsFornecedor: string;
+  idfornecedor: number;
+  dsfornecedor: string;
 };
 
 export type TFornecedorZod = z.infer<typeof fornecedorZod>;
 
 export type TProduto = {
-  idProduto?: number;
-  dsProduto: string;
-  qtProduto: number;
-  vlProduto: string;
+  idproduto?: number;
+  dsproduto: string;
+  qtproduto: number;
+  vlproduto: string;
   fornecedor: TFornecedor;
 };
 
 export type TProdutoReturn = {
-  idProduto?: number;
-  dsProduto: string;
-  qtProduto: number;
-  vlProduto: string;
-  idFornecedor: number;
+  idproduto?: number;
+  dsproduto: string;
+  qtproduto: number;
+  vlproduto: string;
+  idfornecedor: number;
 };
 
 export type TProdutoZod = z.infer<typeof produtoZod>;
@@ -56,10 +56,10 @@ export type TItemZod = z.infer<typeof itemZod>;
 export type TFuncionarioZod = z.infer<typeof funcionarioZod>;
 
 export type TFuncionario = {
-  idFuncionario: number;
-  dsFuncionario: string;
-  dsFuncao: string;
-  nrCpf: string;
+  idfuncionario: number;
+  dsfuncionario: string;
+  dsfuncao: string;
+  nrcpf: string;
 };
 
 export type TResponse<TData> = {

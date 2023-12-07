@@ -1,49 +1,49 @@
 import z from 'zod';
 
 export const fornecedorZod = z.object({
-  idFornecedor: z.number().optional(),
-  dsFornecedor: z.string(),
+  idfornecedor: z.number().optional(),
+  dsfornecedor: z.string(),
 });
 
 export const produtoZod = z.object({
-  idProduto: z.number().optional(),
-  dsProduto: z.string(),
-  vlProduto: z.string(),
-  qtProduto: z.number(),
+  idproduto: z.number().optional(),
+  dsproduto: z.string(),
+  vlproduto: z.string(),
+  qtproduto: z.number(),
   fornecedor: z.object({
-    idFornecedor: z.number(),
-    dsFornecedor: z.string(),
+    idfornecedor: z.number(),
+    dsfornecedor: z.string(),
   }),
 });
 
 export const itemZod = z.object({
-  idItem: z.number(),
-  qtItem: z.number().default(0),
-  vlParcial: z.number().default(0),
+  iditem: z.number(),
+  qtitem: z.number().default(0),
+  vlparcial: z.number().default(0),
   produto: z
     .object({
-      idProduto: z.number(),
-      dsProduto: z.string().nullish(),
-      vlProduto: z.string().nullish(),
-      qtProduto: z.number().nullish(),
+      idproduto: z.number(),
+      dsproduto: z.string().nullish(),
+      vlproduto: z.string().nullish(),
+      qtproduto: z.number().nullish(),
     })
     .nullable(),
 });
 
 export const vendaZod = z.object({
-  idVenda: z.number().optional(),
-  dtVenda: z.string().min(9),
-  vlTotal: z.number().default(0),
+  idvenda: z.number().optional(),
+  dtvenda: z.string().min(9),
+  vltotal: z.number().default(0),
   funcionario: z.object({
-    dsFuncionario: z.string(),
+    dsfuncionario: z.string(),
   }),
   item: z.array(itemZod).min(1).default([]),
 });
 
 export const funcionarioZod = z.object({
-  idFuncionario: z.number().optional(),
-  dsFuncionario: z.string(),
-  nrCpf: z.string(),
-  dsFuncao: z.string(),
-  dsSenha: z.string(),
+  idfuncionario: z.number().optional(),
+  dsfuncionario: z.string(),
+  nrcpf: z.string(),
+  dsfuncao: z.string(),
+  dssenha: z.string(),
 });

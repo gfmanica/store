@@ -26,9 +26,9 @@ type TProdutoDataTable = {
 const getRows = (data: TItemZod[] | undefined) => {
   if (data) {
     return data.map((item) => ({
-      id: item.idItem,
-      qtItem: item.qtItem,
-      vlParcial: item.vlParcial,
+      id: item.iditem,
+      qtitem: item.qtitem,
+      vlparcial: item.vlparcial,
       produto: item.produto,
     }));
   }
@@ -38,11 +38,11 @@ const getRows = (data: TItemZod[] | undefined) => {
 
 const columns = [
   {
-    key: 'qtItem',
+    key: 'qtitem',
     label: 'Quantidade',
   },
   {
-    key: 'vlParcial',
+    key: 'vlparcial',
     label: 'Valor total',
   },
   {
@@ -67,28 +67,28 @@ export default function ProdutoDataTable({
 
   const updateTotalValue = () => {
     setValue(
-      'vlTotal',
-      Number(data.reduce((acc, cur) => acc + Number(cur.vlParcial), 0))
+      'vltotal',
+      Number(data.reduce((acc, cur) => acc + Number(cur.vlparcial), 0))
     );
   };
 
   const renderCell = (item: any, columnKey: any): ReactNode => {
-    const index = data.findIndex((produto) => produto.idItem === item.id);
+    const index = data.findIndex((produto) => produto.iditem === item.id);
     const cellValue = item[columnKey];
 
     switch (columnKey) {
-      case 'qtItem':
+      case 'qtitem':
         return (
           <NumberFormField<TVendaZod>
             control={control}
-            name={`item.${index}.qtItem`}
+            name={`item.${index}.qtitem`}
             size="sm"
-            error={errors?.item && errors?.item[index]?.qtItem}
+            error={errors?.item && errors?.item[index]?.qtitem}
             onChangeCallback={(value) => {
               setValue(
-                `item.${index}.vlParcial`,
+                `item.${index}.vlparcial`,
                 Number(
-                  value * Number(getValues(`item.${index}.produto.vlProduto`))
+                  value * Number(getValues(`item.${index}.produto.vlproduto`))
                 ) || 0
               );
 
@@ -96,7 +96,7 @@ export default function ProdutoDataTable({
             }}
           />
         );
-      case 'vlParcial':
+      case 'vlparcial':
         return money(cellValue);
 
       case 'produto':
@@ -105,12 +105,12 @@ export default function ProdutoDataTable({
             control={control}
             label="Produto"
             name={`item.${index}.produto`}
-            error={errors?.item && errors?.item[index]?.produto?.idProduto}
+            error={errors?.item && errors?.item[index]?.produto?.idproduto}
             onChangeCallback={(value) => {
               setValue(
-                `item.${index}.vlParcial`,
-                Number(value ? value?.vlProduto : 0) *
-                  Number(getValues(`item.${index}.qtItem`))
+                `item.${index}.vlparcial`,
+                Number(value ? value?.vlproduto : 0) *
+                  Number(getValues(`item.${index}.qtitem`))
               );
 
               updateTotalValue();

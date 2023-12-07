@@ -66,7 +66,7 @@ export default function ProdutoFormAutocomplete<
       control={control}
       render={({ field: { onChange, value } }) => {
         if (data?.data && !selectedKey && value) {
-          setSelectedKey(value.idProduto.toString());
+          setSelectedKey(value.idproduto.toString());
         }
 
         return (
@@ -82,7 +82,7 @@ export default function ProdutoFormAutocomplete<
             selectedKey={selectedKey}
             onSelectionChange={(key: string) => {
               const fornecedor = data?.data?.find(
-                (item) => item.idProduto === Number(key)
+                (item) => item.idproduto === Number(key)
               );
 
               if (fornecedor) {
@@ -99,8 +99,8 @@ export default function ProdutoFormAutocomplete<
             }}
           >
             {(fornecedor: TProduto) => (
-              <AutocompleteItem key={fornecedor.idProduto}>
-                {fornecedor.dsProduto}
+              <AutocompleteItem key={fornecedor.idproduto}>
+                {fornecedor.dsproduto}
               </AutocompleteItem>
             )}
           </Autocomplete>

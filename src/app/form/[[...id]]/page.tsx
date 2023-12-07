@@ -36,7 +36,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
   } = useForm<TVendaZod>({
     resolver: zodResolver(vendaZod),
     defaultValues: {
-      funcionario: { dsFuncionario: user },
+      funcionario: { dsfuncionario: user },
     },
   });
 
@@ -59,11 +59,11 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
 
     if (data?.data) {
       data.data.item.forEach((item) => {
-        item.vlParcial = Number(item.vlParcial);
+        item.vlparcial = Number(item.vlparcial);
       });
 
-      data.data.dtVenda = new Date(data.data.dtVenda).toLocaleDateString();
-      data.data.funcionario = { dsFuncionario: user };
+      data.data.dtvenda = new Date(data.data.dtvenda).toLocaleDateString();
+      data.data.funcionario = { dsfuncionario: user };
 
       reset(data?.data);
     }
@@ -78,11 +78,11 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
       idVenda
         ? Api.put('/api/venda', {
             ...data,
-            funcionario: { dsFuncionario: user },
+            funcionario: { dsfuncionario: user },
           })
         : Api.post('/api/venda', {
             ...data,
-            funcionario: { dsFuncionario: user },
+            funcionario: { dsfuncionario: user },
           }),
     onSuccess: (data) => {
       if (data.data.status === 400) {
@@ -93,7 +93,7 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
         let message = 'Venda salva com sucesso!';
 
         if (!idVenda) {
-          push(`/form/${data.data.data.idVenda}`);
+          push(`/form/${data.data.data.idvenda}`);
 
           message = 'Venda criado com sucesso!';
         }
@@ -107,13 +107,13 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
     const items = getValues('item') || [];
 
     let newItem: TItemZod = {
-      idItem: items.at(-1)
-        ? Number(items.at(-1)?.idItem) < 0
-          ? Number(items.at(-1)?.idItem) - 1
+      iditem: items.at(-1)
+        ? Number(items.at(-1)?.iditem) < 0
+          ? Number(items.at(-1)?.iditem) - 1
           : -1
         : -1,
-      qtItem: 0,
-      vlParcial: 0,
+      qtitem: 0,
+      vlparcial: 0,
       produto: null,
     };
 
@@ -122,9 +122,9 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
 
   const formatData = (data: TVendaZod) => {
     const newData = { ...data };
-    const [day, month, year] = newData.dtVenda.split('/');
+    const [day, month, year] = newData.dtvenda.split('/');
 
-    newData.dtVenda = new Date(`${year}-${month}-${day}`).toISOString();
+    newData.dtvenda = new Date(`${year}-${month}-${day}`).toISOString();
 
     mutate(newData);
   };
@@ -140,21 +140,21 @@ export default function VendaForm({ params }: { params: { id: string[] } }) {
           <PatternFormField<TVendaZod>
             control={control}
             label="Data da venda"
-            name="dtVenda"
+            name="dtvenda"
             mask="_"
             format="##/##/####"
             allowEmptyFormatting
-            error={errors.dtVenda}
+            error={errors.dtvenda}
           />
 
           <NumberFormField<TVendaZod>
             control={control}
             label="Valor total"
-            name="vlTotal"
+            name="vltotal"
             disabled
             prefix="R$ "
             decimalScale={2}
-            error={errors.vlTotal}
+            error={errors.vltotal}
           />
         </div>
 

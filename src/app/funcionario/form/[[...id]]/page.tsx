@@ -32,7 +32,7 @@ export default function FuncionarioForm({
 }) {
   const { isAuthenticated } = useAuthContext();
   const Api = useApiContext();
-  const idFuncionario = params?.id?.[0];
+  const idfuncionario = params?.id?.[0];
   const { push } = useRouter();
 
   const {
@@ -47,10 +47,10 @@ export default function FuncionarioForm({
   const { data, isFetching, error } = useQuery<TResponse<TFuncionarioZod>>({
     queryKey: ['getFuncionario'],
     queryFn: () =>
-      Api.get(`/api/funcionario/${idFuncionario}`).then((res) => res.data),
+      Api.get(`/api/funcionario/${idfuncionario}`).then((res) => res.data),
     retry: false,
     gcTime: 0,
-    enabled: isAuthenticated && !!idFuncionario,
+    enabled: isAuthenticated && !!idfuncionario,
   });
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function FuncionarioForm({
     TFuncionarioZod
   >({
     mutationFn: (data) =>
-      idFuncionario
+      idfuncionario
         ? Api.put('/api/funcionario', data)
         : Api.post('/api/funcionario', data),
     onSuccess: (data) => {
@@ -80,8 +80,8 @@ export default function FuncionarioForm({
       } else {
         let message = 'Funcionário salvo com sucesso!';
 
-        if (!idFuncionario) {
-          push(`/funcionario/form/${data.data.data.idFuncionario}`);
+        if (!idfuncionario) {
+          push(`/funcionario/form/${data.data.data.idfuncionario}`);
 
           message = 'Funcionário criado com sucesso!';
         }
@@ -94,7 +94,7 @@ export default function FuncionarioForm({
   return (
     <>
       <p className="text-2xl font-semibold">
-        {idFuncionario ? 'Editar' : 'Cadastrar'} funcionario
+        {idfuncionario ? 'Editar' : 'Cadastrar'} funcionario
       </p>
 
       <form
@@ -105,17 +105,17 @@ export default function FuncionarioForm({
           <TextFormField<TFuncionarioZod>
             control={control}
             label="Funcionário"
-            name="dsFuncionario"
-            error={errors.dsFuncionario}
-            disabled={Boolean(idFuncionario)}
+            name="dsfuncionario"
+            error={errors.dsfuncionario}
+            disabled={Boolean(idfuncionario)}
           />
 
           <PatternFormField<TFuncionarioZod>
             control={control}
             format="###.###.###-##"
             label="CPF"
-            name="nrCpf"
-            error={errors.nrCpf}
+            name="nrcpf"
+            error={errors.nrcpf}
           />
         </div>
 
@@ -123,15 +123,15 @@ export default function FuncionarioForm({
           <TextFormField<TFuncionarioZod>
             control={control}
             label="Senha"
-            name="dsSenha"
-            error={errors.dsSenha}
+            name="dssenha"
+            error={errors.dssenha}
           />
 
           <FuncaoFormAutocomplete<TFuncionarioZod>
             control={control}
             label="Funcao"
-            name="dsFuncao"
-            error={errors.dsFuncao}
+            name="dsfuncao"
+            error={errors.dsfuncao}
           />
         </div>
 
